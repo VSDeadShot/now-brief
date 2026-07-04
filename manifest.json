@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "Now Brief",
+  "version": "1.0.0",
+  "description": "Personal daily dashboard overriding the new tab page.",
+  "chrome_url_overrides": {
+    "newtab": "index.html"
+  },
+  "permissions": [
+    "storage",
+    "alarms"
+  ],
+  "background": {
+    "service_worker": "src/background/service-worker.js",
+    "type": "module"
+  }
+}
