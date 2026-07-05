@@ -1,6 +1,7 @@
 import React from 'react';
 import GithubStreakCard from './components/GithubStreakCard';
 import WeatherCard from './components/WeatherCard';
+import DsaReviewCard from './components/DsaReviewCard';
 
 export default function NewTab() {
   const hour = new Date().getHours();
@@ -16,6 +17,7 @@ export default function NewTab() {
         
         <div className="flex flex-col gap-6 w-full">
           <WeatherCard />
+          <DsaReviewCard />
           <GithubStreakCard />
         </div>
       </div>
