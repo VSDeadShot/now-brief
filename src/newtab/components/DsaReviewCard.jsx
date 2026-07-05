@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { fetchDsaReviews } from '../../lib/dsaTracker';
+import { getCache, setCache } from '../../lib/cache';
 
 export default function DsaReviewCard() {
   const [data, setData] = useState(null);
@@ -8,9 +9,17 @@ export default function DsaReviewCard() {
 
   useEffect(() => {
     async function loadData() {
-      // In phase 2 this will use chrome.storage.local caching
-      const result = await fetchDsaReviews();
-      setData(result);
+      const cached = await getCache('dsa_reviews');
+      if (cached) {
+        setData(cached);
+        setLoading(false);
+      }
+
+      const freshData = await fetchDsaReviews();
+      if (freshData) {
+        setData(freshData);
+        setCache('dsa_reviews', freshData);
+      }
       setLoading(false);
     }
     loadData();

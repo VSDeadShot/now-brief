@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { fetchGithubActivity } from '../../lib/github';
+import { getCache, setCache } from '../../lib/cache';
 
 export default function GithubStreakCard() {
   const [data, setData] = useState(null);
@@ -8,10 +9,20 @@ export default function GithubStreakCard() {
 
   useEffect(() => {
     async function loadData() {
-      // In phase 2 we will use chrome.storage.local for caching
-      // For now, just fetch live
-      const result = await fetchGithubActivity('VSDeadShot');
-      setData(result);
+      // 1. Instantly load from cache if available
+      const cached = await getCache('github_streak');
+      if (cached) {
+        setData(cached);
+        setLoading(false);
+      }
+
+      // 2. Fetch fresh data in the background
+      const freshData = await fetchGithubActivity('VSDeadShot');
+      if (freshData) {
+        setData(freshData);
+        setCache('github_streak', freshData);
+      }
+      
       setLoading(false);
     }
     loadData();

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { fetchWeather } from '../../lib/weather';
+import { getCache, setCache } from '../../lib/cache';
 
 export default function WeatherCard() {
   const [data, setData] = useState(null);
@@ -8,9 +9,17 @@ export default function WeatherCard() {
 
   useEffect(() => {
     async function loadData() {
-      // In phase 2 we will use chrome.storage.local for caching
-      const result = await fetchWeather();
-      setData(result);
+      const cached = await getCache('weather_data');
+      if (cached) {
+        setData(cached);
+        setLoading(false);
+      }
+
+      const freshData = await fetchWeather('Jaipur');
+      if (freshData) {
+        setData(freshData);
+        setCache('weather_data', freshData);
+      }
       setLoading(false);
     }
     loadData();
