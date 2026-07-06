@@ -45,7 +45,7 @@ export default async function handler(req, res) {
   try {
     const feed = await parser.parseURL(feedConfig.url);
     
-    const articles = feed.items.slice(0, 4).map(item => {
+    const articles = feed.items.slice(0, 3).map(item => {
       let excerpt = item.contentSnippet || item.content || item.summary || item.description || '';
       // Strip HTML if any remains, though contentSnippet usually strips it
       excerpt = excerpt.replace(/(<([^>]+)>)/gi, "").trim();
