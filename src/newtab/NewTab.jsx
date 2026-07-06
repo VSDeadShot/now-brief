@@ -3,6 +3,8 @@ import GithubStreakCard from './components/GithubStreakCard';
 import WeatherCard from './components/WeatherCard';
 import DsaReviewCard from './components/DsaReviewCard';
 import OmniTaskCard from './components/OmniTaskCard';
+import SamsungNewsCard from './components/SamsungNewsCard';
+import TechNewsCard from './components/TechNewsCard';
 
 export default function NewTab() {
   const hour = new Date().getHours();
@@ -21,6 +23,8 @@ export default function NewTab() {
           <WeatherCard />
           <DsaReviewCard />
           <GithubStreakCard />
+          <SamsungNewsCard />
+          <TechNewsCard />
         </div>
       </div>
     </div>
