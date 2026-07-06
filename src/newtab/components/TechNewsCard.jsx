@@ -61,7 +61,12 @@ export default function TechNewsCard() {
               <span className="text-white font-medium text-base line-clamp-2 leading-tight group-hover:text-purple-400 transition-colors">
                 {article.title}
               </span>
-              <div className="flex items-center gap-2 text-xs text-zinc-400 font-medium mt-0.5">
+              {article.excerpt && (
+                <p className="text-sm text-zinc-500 font-normal line-clamp-3 mt-0.5 leading-snug">
+                  {article.excerpt}
+                </p>
+              )}
+              <div className="flex items-center gap-2 text-xs text-zinc-400 font-medium mt-1">
                 <span className="text-purple-400">{article.source}</span>
                 <span>•</span>
                 <span>{timeAgo(article.publishedTime)}</span>

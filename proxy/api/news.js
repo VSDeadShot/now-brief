@@ -45,13 +45,22 @@ export default async function handler(req, res) {
   try {
     const feed = await parser.parseURL(feedConfig.url);
     
-    // Extract top 4 articles
-    const articles = feed.items.slice(0, 4).map(item => ({
-      title: item.title,
-      link: item.link,
-      publishedTime: item.isoDate || item.pubDate,
-      source: feedConfig.sourceName
-    }));
+    const articles = feed.items.slice(0, 4).map(item => {
+      let excerpt = item.contentSnippet || item.content || item.summary || item.description || '';
+      // Strip HTML if any remains, though contentSnippet usually strips it
+      excerpt = excerpt.replace(/(<([^>]+)>)/gi, "").trim();
+      if (excerpt.length > 160) {
+        excerpt = excerpt.substring(0, 160) + '...';
+      }
+
+      return {
+        title: item.title,
+        link: item.link,
+        publishedTime: item.isoDate || item.pubDate,
+        source: feedConfig.sourceName,
+        excerpt
+      };
+    });
 
     return res.status(200).json({ articles });
   } catch (error) {
