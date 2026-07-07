@@ -1,4 +1,4 @@
-const PROXY_URL = 'http://localhost:3000';
+const PROXY_URL = 'https://proxy-gamma-three-97.vercel.app';
 
 export async function fetchDsaReviews() {
   try {

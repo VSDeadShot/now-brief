@@ -1,6 +1,6 @@
 // During development, we'll point to the local Vercel dev server.
 // When deploying to production, this should be updated to your Vercel project URL.
-const PROXY_URL = 'http://localhost:3000';
+const PROXY_URL = 'https://proxy-gamma-three-97.vercel.app';
 
 export async function fetchWeather(city = 'Jaipur') {
   try {
