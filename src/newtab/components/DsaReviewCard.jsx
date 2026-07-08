@@ -37,6 +37,7 @@ export default function DsaReviewCard({ timeOfDay = 'evening' }) {
       transition={{ type: 'spring', stiffness: 400, damping: 30 }}
       className={`w-full rounded-[24px] ${cardBg} p-6 flex flex-col gap-4 shadow-lg`}
     >
+      <div className={`text-xs font-bold uppercase tracking-wider ${subTextColor} opacity-70`}>DSA Tracker</div>
       {loading ? (
         <div className="animate-pulse flex flex-col gap-2">
           <div className={`h-12 ${isLight ? 'bg-black/5' : 'bg-white/10'} rounded-lg w-16`}></div>
