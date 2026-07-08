@@ -16,8 +16,8 @@ Now Brief aggregates everything you need into a single, instantly loading feed, 
 ### Widgets
 
 - **Weather**: Real-time weather data for your area, fetched securely via a backend proxy.
-- **OmniTask Targets**: Syncs locally with your OmniTask desktop app to show pending tasks due today, complete with priority indicators and project badges.
-- **DSA Tracker**: Pulls your daily due algorithm reviews directly from your live DSA Tracker app.
+- **OmniTask Targets**: Syncs locally with your OmniTask desktop app to show pending tasks due today, complete with priority indicators and project badges. *(Note: OmniTask is a custom desktop productivity app built by me. You can find it on my GitHub profile [@VSDeadShot](https://github.com/VSDeadShot))*
+- **DSA Tracker**: Pulls your daily due algorithm reviews directly from your live DSA Tracker app. *(Note: DSA Tracker is another custom tool I built to manage spaced repetition for algorithms. Check it out on my GitHub profile [@VSDeadShot](https://github.com/VSDeadShot))*
 - **Developer Activity**: Tracks your daily GitHub commit streak and today's contribution count. (Click the card to instantly open your GitHub profile).
 - **Curated News**: Fetches and parses RSS feeds for Samsung News (SamMobile) and General Tech News (The Verge), providing clean, truncated excerpts.
 
