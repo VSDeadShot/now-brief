@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import GithubStreakCard from './components/GithubStreakCard';
 import WeatherCard from './components/WeatherCard';
 import DsaReviewCard from './components/DsaReviewCard';
@@ -7,10 +7,8 @@ import SamsungNewsCard from './components/SamsungNewsCard';
 import TechNewsCard from './components/TechNewsCard';
 
 export default function NewTab() {
-  const [forceTime, setForceTime] = useState(null);
-  
   const now = new Date();
-  const hour = forceTime !== null ? forceTime : now.getHours();
+  const hour = now.getHours();
   
   let timeOfDay = 'evening';
   let greeting = 'Evening brief';
@@ -40,10 +38,12 @@ export default function NewTab() {
 
   return (
     <div className={`min-h-screen p-8 flex flex-col items-center justify-start font-sans overflow-y-auto relative z-0 ${baseBgClass}`}>
-      {/* Animated Aurora Background Mesh */}
+      {/* Animated Aurora Background Mesh (Top and Bottom Halves) */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-[-1]">
-        <div className={`absolute top-[-10%] left-[-10%] w-[60vw] h-[60vh] rounded-full mix-blend-screen filter blur-[100px] opacity-70 animate-blob1 ${blob1Class}`}></div>
-        <div className={`absolute bottom-[-10%] right-[-10%] w-[60vw] h-[60vh] rounded-full mix-blend-screen filter blur-[120px] opacity-70 animate-blob2 ${blob2Class}`}></div>
+        {/* Top Half Blob */}
+        <div className={`absolute top-[-20%] left-[-20%] w-[140vw] h-[70vh] rounded-[100%] mix-blend-screen filter blur-[100px] opacity-70 animate-blob1 ${blob1Class}`}></div>
+        {/* Bottom Half Blob */}
+        <div className={`absolute bottom-[-20%] right-[-20%] w-[140vw] h-[70vh] rounded-[100%] mix-blend-screen filter blur-[120px] opacity-70 animate-blob2 ${blob2Class}`}></div>
       </div>
       <div className="w-full max-w-5xl py-8 flex flex-col gap-8">
         
@@ -97,12 +97,6 @@ export default function NewTab() {
         </div>
       </div>
 
-      {/* Temporary Debug Toggle */}
-      <div className="fixed bottom-4 right-4 flex gap-2 z-50 bg-black/40 backdrop-blur-md p-2 rounded-xl text-white">
-        <button onClick={() => setForceTime(9)} className="px-3 py-1.5 hover:bg-white/20 rounded-lg text-xs font-medium transition-colors">Morning</button>
-        <button onClick={() => setForceTime(14)} className="px-3 py-1.5 hover:bg-white/20 rounded-lg text-xs font-medium transition-colors">Afternoon</button>
-        <button onClick={() => setForceTime(20)} className="px-3 py-1.5 hover:bg-white/20 rounded-lg text-xs font-medium transition-colors">Evening</button>
-      </div>
     </div>
   );
 }
