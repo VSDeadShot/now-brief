@@ -15,25 +15,36 @@ export default function NewTab() {
   let timeOfDay = 'evening';
   let greeting = 'Evening brief';
   let subtitle = "Here's a recap of your day.";
-  let bgClass = "bg-gradient-to-b from-[#111e24] to-[#0a0a0a] text-white";
+  let baseBgClass = "bg-[#050a0d] text-white";
+  let blob1Class = "bg-[#0f2a33]";
+  let blob2Class = "bg-[#111e24]";
   let highlightClass = "text-teal-400";
 
   if (hour >= 5 && hour < 12) {
     timeOfDay = 'morning';
     greeting = 'Morning brief';
     subtitle = "Start your day with this briefing.";
-    bgClass = "bg-gradient-to-b from-[#e0f0ff] to-[#cbe5ff] text-[#1A1A1A]";
+    baseBgClass = "bg-[#d5e8ff] text-[#1A1A1A]";
+    blob1Class = "bg-[#e0f0ff]";
+    blob2Class = "bg-[#cbe5ff]";
     highlightClass = "text-blue-500";
   } else if (hour >= 12 && hour < 17) {
     timeOfDay = 'afternoon';
     greeting = 'Have a good day';
     subtitle = "Hope your day is going as planned.";
-    bgClass = "bg-gradient-to-b from-[#112217] to-[#0a0a0a] text-white";
+    baseBgClass = "bg-[#0a120c] text-white";
+    blob1Class = "bg-[#163321]";
+    blob2Class = "bg-[#112217]";
     highlightClass = "text-emerald-400";
   }
 
   return (
-    <div className={`min-h-screen p-8 flex flex-col items-center justify-start font-sans overflow-y-auto ${bgClass}`}>
+    <div className={`min-h-screen p-8 flex flex-col items-center justify-start font-sans overflow-y-auto relative z-0 ${baseBgClass}`}>
+      {/* Animated Aurora Background Mesh */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none z-[-1]">
+        <div className={`absolute top-[-10%] left-[-10%] w-[60vw] h-[60vh] rounded-full mix-blend-screen filter blur-[100px] opacity-70 animate-blob1 ${blob1Class}`}></div>
+        <div className={`absolute bottom-[-10%] right-[-10%] w-[60vw] h-[60vh] rounded-full mix-blend-screen filter blur-[120px] opacity-70 animate-blob2 ${blob2Class}`}></div>
+      </div>
       <div className="w-full max-w-5xl py-8 flex flex-col gap-8">
         
         {/* Main Header */}
