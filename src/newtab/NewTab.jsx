@@ -61,10 +61,7 @@ export default function NewTab() {
               <OmniTaskCard timeOfDay={timeOfDay} />
               <DsaReviewCard timeOfDay={timeOfDay} />
             </div>
-          </div>
 
-          {/* Right Column */}
-          <div className="flex flex-col gap-8">
             {/* Developer Activity Section */}
             <div className="flex flex-col gap-3 w-full">
               <p className="text-lg opacity-90">
@@ -72,7 +69,10 @@ export default function NewTab() {
               </p>
               <GithubStreakCard timeOfDay={timeOfDay} />
             </div>
+          </div>
 
+          {/* Right Column */}
+          <div className="flex flex-col gap-8">
             {/* News Section */}
             <div className="flex flex-col gap-3 w-full mb-16">
               <p className="text-lg opacity-90">
