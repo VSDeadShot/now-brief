@@ -36,9 +36,10 @@ export default function GithubStreakCard({ timeOfDay = 'evening' }) {
 
   return (
     <motion.div 
+      onClick={() => window.open('https://github.com/VSDeadShot', '_blank')}
       whileHover={{ y: -4, scale: 1.01 }}
       transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-      className={`w-full rounded-[24px] ${cardBg} p-6 flex flex-col gap-4 shadow-lg`}
+      className={`w-full rounded-[24px] ${cardBg} p-6 flex flex-col gap-4 shadow-lg cursor-pointer`}
     >
       {loading ? (
         <div className="animate-pulse flex flex-col gap-2">
