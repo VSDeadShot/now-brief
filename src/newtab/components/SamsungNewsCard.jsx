@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { Newspaper } from 'lucide-react';
 import { fetchNews } from '../../lib/news';
 import { getCache, setCache } from '../../lib/cache';
 
@@ -41,10 +42,8 @@ export default function SamsungNewsCard() {
       className="w-full rounded-[24px] bg-[#1E1E1E] border border-[#2C2C2C] p-4 flex flex-col gap-4 shadow-[0_4px_16px_rgba(0,0,0,0.2)]"
     >
       <div className="flex items-center gap-3 text-[#A0A0A0]">
-        <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
-          <path d="M7.5 1.5h9c1.24 0 2.25 1.01 2.25 2.25v16.5c0 1.24-1.01 2.25-2.25 2.25h-9C6.26 22.5 5.25 21.49 5.25 20.25v-16.5c0-1.24 1.01-2.25 2.25-2.25zm0 1.5v16.5h9V3h-9zm4.5 14.25a1.125 1.125 0 110 2.25 1.125 1.125 0 010-2.25z" />
-        </svg>
-        <h2 className="font-bold text-lg text-[#F5F5F5]">Samsung News</h2>
+        <Newspaper strokeWidth={2} className="w-[18px] h-[18px] text-blue-500" />
+        <h2 className="font-semibold text-sm text-[#F5F5F5]">Samsung News</h2>
       </div>
 
       {loading ? (
@@ -57,11 +56,11 @@ export default function SamsungNewsCard() {
         <ul className="flex flex-col gap-4">
           {articles.map((article, idx) => (
             <li key={idx} className="flex flex-col gap-1 group cursor-pointer" onClick={() => window.open(article.link, '_blank')}>
-              <span className="text-[#F5F5F5] font-medium text-base line-clamp-2 leading-tight group-hover:text-blue-500 transition-colors">
+              <span className="text-[#F5F5F5] font-medium text-xs line-clamp-2 leading-tight group-hover:text-blue-500 transition-colors">
                 {article.title}
               </span>
               {article.excerpt && (
-                <p className="text-sm text-[#A0A0A0] font-normal line-clamp-3 mt-0.5 leading-snug">
+                <p className="text-xs text-[#A0A0A0] font-normal line-clamp-3 mt-0.5 leading-snug">
                   {article.excerpt}
                 </p>
               )}
@@ -74,7 +73,7 @@ export default function SamsungNewsCard() {
           ))}
         </ul>
       ) : (
-        <div className="text-[#A0A0A0] text-sm font-medium">
+        <div className="text-[#A0A0A0] text-xs font-medium">
           Cannot load Samsung news right now.
         </div>
       )}

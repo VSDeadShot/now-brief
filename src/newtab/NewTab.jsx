@@ -23,8 +23,8 @@ export default function NewTab() {
   return (
     <div className="min-h-screen p-4 flex flex-col items-center justify-start bg-[#121212] text-[#F5F5F5] font-sans overflow-y-auto">
       <div className="w-full max-w-2xl py-8">
-        <h1 className="text-3xl font-bold mb-1 tracking-tight">{greeting}, Vedansh</h1>
-        <p className="text-[#A0A0A0] font-medium mb-8">{dateString}</p>
+        <h1 className="text-lg font-medium mb-1 tracking-tight">{greeting}, Vedansh</h1>
+        <p className="text-xs text-[#A0A0A0] font-medium mb-8">{dateString}</p>
         
         <div className="flex flex-col gap-3 w-full">
           <OmniTaskCard />

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { ListTodo } from 'lucide-react';
 import { fetchDsaReviews } from '../../lib/dsaTracker';
 import { getCache, setCache } from '../../lib/cache';
 
@@ -32,10 +33,8 @@ export default function DsaReviewCard() {
       className="w-full rounded-[24px] bg-[#1E1E1E] border border-[#2C2C2C] p-4 flex flex-col gap-4 shadow-[0_4px_16px_rgba(0,0,0,0.2)]"
     >
       <div className="flex items-center gap-3 text-[#A0A0A0]">
-        <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
-          <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 11.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clipRule="evenodd" />
-        </svg>
-        <h2 className="font-bold text-lg text-[#F5F5F5]">DSA Tracker</h2>
+        <ListTodo strokeWidth={2} className="w-[18px] h-[18px] text-blue-500" />
+        <h2 className="font-semibold text-sm text-[#F5F5F5]">DSA Tracker</h2>
       </div>
 
       {loading ? (
@@ -46,18 +45,18 @@ export default function DsaReviewCard() {
       ) : data ? (
         <div className="flex flex-col gap-1">
           <div className="flex items-baseline gap-2">
-            <span className="text-5xl font-extrabold text-[#F5F5F5] tracking-tight">{data.dueToday}</span>
-            <span className="text-[#A0A0A0] font-medium">due today</span>
+            <span className="text-lg font-medium text-[#F5F5F5] tracking-tight">{data.dueToday}</span>
+            <span className="text-xs text-[#A0A0A0] font-medium">due today</span>
           </div>
           <div className="mt-2 flex items-center gap-2">
             <div className={`w-2.5 h-2.5 rounded-full bg-blue-500`}></div>
-            <span className="text-sm font-medium text-[#A0A0A0]">
+            <span className="text-xs font-medium text-[#A0A0A0]">
               {data.dueToday > 0 ? 'Time for your daily review session' : 'All caught up for today!'}
             </span>
           </div>
         </div>
       ) : (
-        <div className="text-[#A0A0A0] text-sm font-medium">Cannot connect to DSA Tracker (Check API endpoint).</div>
+        <div className="text-[#A0A0A0] text-xs font-medium">Cannot connect to DSA Tracker (Check API endpoint).</div>
       )}
     </motion.div>
   );

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { CheckCircle2 } from 'lucide-react';
 import { fetchOmniTasks } from '../../lib/omnitask';
 import { getCache, setCache } from '../../lib/cache';
 
@@ -32,10 +33,8 @@ export default function OmniTaskCard() {
       className="w-full rounded-[24px] bg-[#1E1E1E] border border-[#2C2C2C] p-4 flex flex-col gap-4 shadow-[0_4px_16px_rgba(0,0,0,0.2)]"
     >
       <div className="flex items-center gap-3 text-[#A0A0A0]">
-        <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
-          <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 11.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clipRule="evenodd" />
-        </svg>
-        <h2 className="font-bold text-lg text-[#F5F5F5]">OmniTask</h2>
+        <CheckCircle2 strokeWidth={2} className="w-[18px] h-[18px] text-blue-500" />
+        <h2 className="font-semibold text-sm text-[#F5F5F5]">OmniTask</h2>
       </div>
 
       {loading ? (
@@ -56,7 +55,7 @@ export default function OmniTaskCard() {
                       'bg-blue-500'
                     }`}></div>
                     <div className="flex flex-col overflow-hidden">
-                      <span className="text-[#F5F5F5] font-medium text-base truncate">{task.title || task.name || task}</span>
+                      <span className="text-[#F5F5F5] font-medium text-xs truncate">{task.title || task.name || task}</span>
                       
                       {/* Sub-info row: Project, Priority, Due Date */}
                       {(task.project || task.priority || task.dueDate) && (
@@ -73,9 +72,6 @@ export default function OmniTaskCard() {
 
                           {task.dueDate && (
                             <span className="text-[#A0A0A0] flex items-center gap-1">
-                              <svg viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3">
-                                <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 6a.75.75 0 00-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 000-1.5h-3.75V6z" clipRule="evenodd" />
-                              </svg>
                               {new Date(task.dueDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                             </span>
                           )}
@@ -94,7 +90,7 @@ export default function OmniTaskCard() {
           )}
         </div>
       ) : (
-        <div className="text-[#A0A0A0] text-sm font-medium">
+        <div className="text-[#A0A0A0] text-xs font-medium">
           OmniTask local API is not running. Start the server to see tasks.
         </div>
       )}

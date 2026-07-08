@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { Newspaper } from 'lucide-react';
 import { fetchNews } from '../../lib/news';
 import { getCache, setCache } from '../../lib/cache';
 
@@ -41,11 +42,8 @@ export default function TechNewsCard() {
       className="w-full rounded-[24px] bg-[#1E1E1E] border border-[#2C2C2C] p-4 flex flex-col gap-4 shadow-[0_4px_16px_rgba(0,0,0,0.2)]"
     >
       <div className="flex items-center gap-3 text-[#A0A0A0]">
-        <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
-          <path fillRule="evenodd" d="M12 2.25a.75.75 0 01.75.75v1c0 .414-.336.75-.75.75H8.25a.75.75 0 00-.75.75v12.5a.75.75 0 00.75.75h7.5a.75.75 0 00.75-.75V5.5a.75.75 0 00-.75-.75h-.25a.75.75 0 010-1.5h.25a2.25 2.25 0 012.25 2.25v12.5a2.25 2.25 0 01-2.25 2.25h-7.5A2.25 2.25 0 016 18.5V5.5A2.25 2.25 0 018.25 3.25h3v-1a.75.75 0 01.75-.75z" clipRule="evenodd" />
-          <path d="M9.75 8.25a.75.75 0 01.75-.75h3a.75.75 0 010 1.5h-3a.75.75 0 01-.75-.75zm0 3.75a.75.75 0 01.75-.75h3a.75.75 0 010 1.5h-3a.75.75 0 01-.75-.75z" />
-        </svg>
-        <h2 className="font-bold text-lg text-[#F5F5F5]">Tech News</h2>
+        <Newspaper strokeWidth={2} className="w-[18px] h-[18px] text-blue-500" />
+        <h2 className="font-semibold text-sm text-[#F5F5F5]">Tech News</h2>
       </div>
 
       {loading ? (
@@ -58,11 +56,11 @@ export default function TechNewsCard() {
         <ul className="flex flex-col gap-4">
           {articles.map((article, idx) => (
             <li key={idx} className="flex flex-col gap-1 group cursor-pointer" onClick={() => window.open(article.link, '_blank')}>
-              <span className="text-[#F5F5F5] font-medium text-base line-clamp-2 leading-tight group-hover:text-blue-500 transition-colors">
+              <span className="text-[#F5F5F5] font-medium text-xs line-clamp-2 leading-tight group-hover:text-blue-500 transition-colors">
                 {article.title}
               </span>
               {article.excerpt && (
-                <p className="text-sm text-[#A0A0A0] font-normal line-clamp-3 mt-0.5 leading-snug">
+                <p className="text-xs text-[#A0A0A0] font-normal line-clamp-3 mt-0.5 leading-snug">
                   {article.excerpt}
                 </p>
               )}
@@ -75,7 +73,7 @@ export default function TechNewsCard() {
           ))}
         </ul>
       ) : (
-        <div className="text-[#A0A0A0] text-sm font-medium">
+        <div className="text-[#A0A0A0] text-xs font-medium">
           Cannot load Tech news right now.
         </div>
       )}
