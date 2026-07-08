@@ -38,35 +38,35 @@ export default function SamsungNewsCard() {
     <motion.div 
       whileHover={{ y: -4, scale: 1.01 }}
       transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-      className="w-full rounded-[24px] bg-white/5 backdrop-blur-2xl border border-white/10 p-4 flex flex-col gap-4 shadow-[0_4px_16px_rgba(0,0,0,0.2)]"
+      className="w-full rounded-[24px] bg-[#1E1E1E] border border-[#2C2C2C] p-4 flex flex-col gap-4 shadow-[0_4px_16px_rgba(0,0,0,0.2)]"
     >
-      <div className="flex items-center gap-3 text-zinc-300">
+      <div className="flex items-center gap-3 text-[#A0A0A0]">
         <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
           <path d="M7.5 1.5h9c1.24 0 2.25 1.01 2.25 2.25v16.5c0 1.24-1.01 2.25-2.25 2.25h-9C6.26 22.5 5.25 21.49 5.25 20.25v-16.5c0-1.24 1.01-2.25 2.25-2.25zm0 1.5v16.5h9V3h-9zm4.5 14.25a1.125 1.125 0 110 2.25 1.125 1.125 0 010-2.25z" />
         </svg>
-        <h2 className="font-bold text-lg text-white/90">Samsung News</h2>
+        <h2 className="font-bold text-lg text-[#F5F5F5]">Samsung News</h2>
       </div>
 
       {loading ? (
         <div className="animate-pulse flex flex-col gap-4">
-          <div className="h-4 bg-white/10 rounded w-full"></div>
-          <div className="h-4 bg-white/10 rounded w-5/6"></div>
-          <div className="h-4 bg-white/10 rounded w-full"></div>
+          <div className="h-4 bg-[#2C2C2C] rounded w-full"></div>
+          <div className="h-4 bg-[#2C2C2C] rounded w-5/6"></div>
+          <div className="h-4 bg-[#2C2C2C] rounded w-full"></div>
         </div>
       ) : articles && articles.length > 0 ? (
         <ul className="flex flex-col gap-4">
           {articles.map((article, idx) => (
             <li key={idx} className="flex flex-col gap-1 group cursor-pointer" onClick={() => window.open(article.link, '_blank')}>
-              <span className="text-white font-medium text-base line-clamp-2 leading-tight group-hover:text-blue-400 transition-colors">
+              <span className="text-[#F5F5F5] font-medium text-base line-clamp-2 leading-tight group-hover:text-blue-500 transition-colors">
                 {article.title}
               </span>
               {article.excerpt && (
-                <p className="text-sm text-zinc-500 font-normal line-clamp-3 mt-0.5 leading-snug">
+                <p className="text-sm text-[#A0A0A0] font-normal line-clamp-3 mt-0.5 leading-snug">
                   {article.excerpt}
                 </p>
               )}
-              <div className="flex items-center gap-2 text-xs text-zinc-400 font-medium mt-1">
-                <span className="text-blue-400">{article.source}</span>
+              <div className="flex items-center gap-2 text-xs text-[#A0A0A0] font-medium mt-1">
+                <span className="text-blue-500">{article.source}</span>
                 <span>•</span>
                 <span>{timeAgo(article.publishedTime)}</span>
               </div>
@@ -74,7 +74,7 @@ export default function SamsungNewsCard() {
           ))}
         </ul>
       ) : (
-        <div className="text-zinc-500 text-sm font-medium">
+        <div className="text-[#A0A0A0] text-sm font-medium">
           Cannot load Samsung news right now.
         </div>
       )}

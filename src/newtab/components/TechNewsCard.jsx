@@ -38,36 +38,36 @@ export default function TechNewsCard() {
     <motion.div 
       whileHover={{ y: -4, scale: 1.01 }}
       transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-      className="w-full rounded-[24px] bg-white/5 backdrop-blur-2xl border border-white/10 p-4 flex flex-col gap-4 shadow-[0_4px_16px_rgba(0,0,0,0.2)]"
+      className="w-full rounded-[24px] bg-[#1E1E1E] border border-[#2C2C2C] p-4 flex flex-col gap-4 shadow-[0_4px_16px_rgba(0,0,0,0.2)]"
     >
-      <div className="flex items-center gap-3 text-zinc-300">
+      <div className="flex items-center gap-3 text-[#A0A0A0]">
         <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
           <path fillRule="evenodd" d="M12 2.25a.75.75 0 01.75.75v1c0 .414-.336.75-.75.75H8.25a.75.75 0 00-.75.75v12.5a.75.75 0 00.75.75h7.5a.75.75 0 00.75-.75V5.5a.75.75 0 00-.75-.75h-.25a.75.75 0 010-1.5h.25a2.25 2.25 0 012.25 2.25v12.5a2.25 2.25 0 01-2.25 2.25h-7.5A2.25 2.25 0 016 18.5V5.5A2.25 2.25 0 018.25 3.25h3v-1a.75.75 0 01.75-.75z" clipRule="evenodd" />
           <path d="M9.75 8.25a.75.75 0 01.75-.75h3a.75.75 0 010 1.5h-3a.75.75 0 01-.75-.75zm0 3.75a.75.75 0 01.75-.75h3a.75.75 0 010 1.5h-3a.75.75 0 01-.75-.75z" />
         </svg>
-        <h2 className="font-bold text-lg text-white/90">Tech News</h2>
+        <h2 className="font-bold text-lg text-[#F5F5F5]">Tech News</h2>
       </div>
 
       {loading ? (
         <div className="animate-pulse flex flex-col gap-4">
-          <div className="h-4 bg-white/10 rounded w-full"></div>
-          <div className="h-4 bg-white/10 rounded w-5/6"></div>
-          <div className="h-4 bg-white/10 rounded w-full"></div>
+          <div className="h-4 bg-[#2C2C2C] rounded w-full"></div>
+          <div className="h-4 bg-[#2C2C2C] rounded w-5/6"></div>
+          <div className="h-4 bg-[#2C2C2C] rounded w-full"></div>
         </div>
       ) : articles && articles.length > 0 ? (
         <ul className="flex flex-col gap-4">
           {articles.map((article, idx) => (
             <li key={idx} className="flex flex-col gap-1 group cursor-pointer" onClick={() => window.open(article.link, '_blank')}>
-              <span className="text-white font-medium text-base line-clamp-2 leading-tight group-hover:text-purple-400 transition-colors">
+              <span className="text-[#F5F5F5] font-medium text-base line-clamp-2 leading-tight group-hover:text-blue-500 transition-colors">
                 {article.title}
               </span>
               {article.excerpt && (
-                <p className="text-sm text-zinc-500 font-normal line-clamp-3 mt-0.5 leading-snug">
+                <p className="text-sm text-[#A0A0A0] font-normal line-clamp-3 mt-0.5 leading-snug">
                   {article.excerpt}
                 </p>
               )}
-              <div className="flex items-center gap-2 text-xs text-zinc-400 font-medium mt-1">
-                <span className="text-purple-400">{article.source}</span>
+              <div className="flex items-center gap-2 text-xs text-[#A0A0A0] font-medium mt-1">
+                <span className="text-blue-500">{article.source}</span>
                 <span>•</span>
                 <span>{timeAgo(article.publishedTime)}</span>
               </div>
@@ -75,7 +75,7 @@ export default function TechNewsCard() {
           ))}
         </ul>
       ) : (
-        <div className="text-zinc-500 text-sm font-medium">
+        <div className="text-[#A0A0A0] text-sm font-medium">
           Cannot load Tech news right now.
         </div>
       )}
