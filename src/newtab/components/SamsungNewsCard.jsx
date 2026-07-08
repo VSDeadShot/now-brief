@@ -38,7 +38,7 @@ export default function SamsungNewsCard() {
     <motion.div 
       whileHover={{ y: -4, scale: 1.01 }}
       transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-      className="w-full rounded-[32px] bg-white/5 backdrop-blur-2xl border border-white/10 p-7 flex flex-col gap-4 shadow-lg shadow-black/20"
+      className="w-full rounded-[24px] bg-white/5 backdrop-blur-2xl border border-white/10 p-4 flex flex-col gap-4 shadow-[0_4px_16px_rgba(0,0,0,0.2)]"
     >
       <div className="flex items-center gap-3 text-zinc-300">
         <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">

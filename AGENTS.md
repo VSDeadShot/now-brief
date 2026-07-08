@@ -24,3 +24,11 @@ New tab override renders instantly from cached data in `chrome.storage.local`, t
 - Do not commit or push to GitHub without explicit approval
 - Build and test one feature at a time â€” do not batch multiple features into one commit
 - After each feature works and is confirmed, commit and push before starting the next one
+
+## UI Constraints (Now Brief visual polish)
+- Card corner radius: 20-24px, consistent across all cards — never mix radii
+- One accent color only — do not introduce per-card colors
+- Dark mode is default; build/verify dark before light
+- Icons: single set, single stroke weight — do not mix icon libraries
+- Max 3 font sizes in the popup
+

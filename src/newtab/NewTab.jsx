@@ -7,18 +7,26 @@ import SamsungNewsCard from './components/SamsungNewsCard';
 import TechNewsCard from './components/TechNewsCard';
 
 export default function NewTab() {
-  const hour = new Date().getHours();
+  const now = new Date();
+  const hour = now.getHours();
+  
   let greeting = 'Good evening';
   if (hour < 12) greeting = 'Good morning';
   else if (hour < 18) greeting = 'Good afternoon';
 
+  const dateString = now.toLocaleDateString('en-US', {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric'
+  });
+
   return (
-    <div className="min-h-screen p-8 flex flex-col items-center justify-start bg-black text-white font-sans overflow-y-auto">
-      <div className="w-full max-w-2xl py-12">
-        <h1 className="text-4xl font-bold mb-2 tracking-tight">{greeting}, Vedansh</h1>
-        <p className="text-zinc-400 font-medium mb-10">Here is your daily brief.</p>
+    <div className="min-h-screen p-4 flex flex-col items-center justify-start bg-black text-white font-sans overflow-y-auto">
+      <div className="w-full max-w-2xl py-8">
+        <h1 className="text-3xl font-bold mb-1 tracking-tight">{greeting}, Vedansh</h1>
+        <p className="text-zinc-400 font-medium mb-8">{dateString}</p>
         
-        <div className="flex flex-col gap-6 w-full">
+        <div className="flex flex-col gap-3 w-full">
           <OmniTaskCard />
           <WeatherCard />
           <DsaReviewCard />
