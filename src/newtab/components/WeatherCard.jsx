@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { CloudRain } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Card from './Card';
+import WeatherEffects from './WeatherEffects';
 import { fetchWeather } from '../../lib/weather';
 import { getCache, setCache } from '../../lib/cache';
 
@@ -34,10 +35,13 @@ export default function WeatherCard({ timeOfDay = 'evening' }) {
 
   return (
     <Card 
-      className={`${bgClass} text-white cursor-pointer transition-all duration-300`}
+      className={`relative overflow-hidden ${bgClass} text-white cursor-pointer transition-all duration-300`}
       onClick={() => setIsExpanded(!isExpanded)}
     >
-      {loading ? (
+      <WeatherEffects condition={data?.condition} />
+      
+      <div className="relative z-10 w-full flex flex-col gap-4">
+        {loading ? (
         <div className="animate-pulse flex flex-col gap-2">
           <div className="h-12 bg-white/20 rounded-lg w-20"></div>
           <div className="h-4 bg-white/20 rounded-md w-32 mt-1"></div>
@@ -85,10 +89,11 @@ export default function WeatherCard({ timeOfDay = 'evening' }) {
             </motion.div>
           )}
         </AnimatePresence>
+        </div>
+        ) : (
+          <div className="relative z-10 text-white/80 text-sm font-medium">Weather data unavailable (Check proxy/API key).</div>
+        )}
       </div>
-      ) : (
-        <div className="text-white/80 text-sm font-medium">Weather data unavailable (Check proxy/API key).</div>
-      )}
     </Card>
   );
 }
