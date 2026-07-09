@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
 import { CheckCircle2 } from 'lucide-react';
+import Card from './Card';
 import { fetchOmniTasks } from '../../lib/omnitask';
 import { getCache, setCache } from '../../lib/cache';
 
@@ -32,11 +32,7 @@ export default function OmniTaskCard({ timeOfDay = 'evening' }) {
   const subTextColor = isLight ? "text-[#6E6E6E]" : "text-[#A0A0A0]";
 
   return (
-    <motion.div 
-      whileHover={{ y: -4, scale: 1.01 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-      className={`w-full rounded-[24px] ${cardBg} p-6 flex flex-col gap-4 shadow-lg`}
-    >
+    <Card timeOfDay={timeOfDay}>
       <div className={`text-xs font-bold uppercase tracking-wider ${subTextColor} opacity-70`}>OmniTask</div>
       {loading ? (
         <div className="animate-pulse flex flex-col gap-3">
@@ -95,6 +91,6 @@ export default function OmniTaskCard({ timeOfDay = 'evening' }) {
           OmniTask local API is not running. Start the server to see tasks.
         </div>
       )}
-    </motion.div>
+    </Card>
   );
 }

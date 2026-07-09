@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
 import { Flame } from 'lucide-react';
+import Card from './Card';
 import { fetchGithubActivity } from '../../lib/github';
 import { getCache, setCache } from '../../lib/cache';
 
@@ -35,11 +35,9 @@ export default function GithubStreakCard({ timeOfDay = 'evening' }) {
   const subTextColor = isLight ? "text-[#6E6E6E]" : "text-[#A0A0A0]";
 
   return (
-    <motion.div 
+    <Card 
+      timeOfDay={timeOfDay} 
       onClick={() => window.open('https://github.com/VSDeadShot', '_blank')}
-      whileHover={{ y: -4, scale: 1.01 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-      className={`w-full rounded-[24px] ${cardBg} p-6 flex flex-col gap-4 shadow-lg cursor-pointer`}
     >
       {loading ? (
         <div className="animate-pulse flex flex-col gap-2">
@@ -66,6 +64,6 @@ export default function GithubStreakCard({ timeOfDay = 'evening' }) {
       ) : (
         <div className={`${subTextColor} text-sm font-medium`}>Failed to load GitHub activity.</div>
       )}
-    </motion.div>
+    </Card>
   );
 }

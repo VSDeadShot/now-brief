@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
 import { CloudRain } from 'lucide-react';
+import Card from './Card';
 import { fetchWeather } from '../../lib/weather';
 import { getCache, setCache } from '../../lib/cache';
 
@@ -31,11 +31,7 @@ export default function WeatherCard({ timeOfDay = 'evening' }) {
   else if (timeOfDay === 'afternoon') bgClass = "bg-gradient-to-br from-[#6B6286] to-[#80769D]";
 
   return (
-    <motion.div 
-      whileHover={{ y: -4, scale: 1.01 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-      className={`w-full rounded-[24px] ${bgClass} p-6 flex flex-col gap-4 shadow-lg text-white`}
-    >
+    <Card className={`${bgClass} text-white`}>
       {loading ? (
         <div className="animate-pulse flex flex-col gap-2">
           <div className="h-12 bg-white/20 rounded-lg w-20"></div>
@@ -60,6 +56,6 @@ export default function WeatherCard({ timeOfDay = 'evening' }) {
       ) : (
         <div className="text-white/80 text-sm font-medium">Weather data unavailable (Check proxy/API key).</div>
       )}
-    </motion.div>
+    </Card>
   );
 }
