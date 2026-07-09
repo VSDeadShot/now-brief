@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { CloudRain } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Card from './Card';
 import { fetchWeather } from '../../lib/weather';
 import { getCache, setCache } from '../../lib/cache';
@@ -59,28 +59,32 @@ export default function WeatherCard({ timeOfDay = 'evening' }) {
         </div>
 
         {/* Expanded Forecast View */}
-        {isExpanded && data.hourly && (
-          <motion.div 
-            initial={{ opacity: 0, height: 0, marginTop: 0 }}
-            animate={{ opacity: 1, height: 'auto', marginTop: 16 }}
-            className="flex flex-col border-t border-white/20 pt-4"
-          >
-            <div className="flex items-center justify-between gap-4 w-full overflow-x-auto pb-2 scrollbar-hide">
-              {data.hourly.map((hour, i) => (
-                <div key={i} className="flex flex-col items-center gap-1 min-w-[50px]">
-                  <span className="text-[11px] font-medium text-white/70">{hour.time}</span>
-                  <img src={`https://openweathermap.org/img/wn/${hour.icon}.png`} alt="icon" className="w-8 h-8" />
-                  <span className="text-sm font-bold">{hour.temp}°</span>
-                </div>
-              ))}
-            </div>
-            
-            <div className="mt-4 flex flex-col gap-1">
-              <span className="text-xs text-white/70">Forecast Insight</span>
-              <span className="text-sm font-bold text-white">Expect {data.hourly[0].temp}° and {data.condition.toLowerCase()} soon.</span>
-            </div>
-          </motion.div>
-        )}
+        <AnimatePresence>
+          {isExpanded && data.hourly && (
+            <motion.div 
+              initial={{ opacity: 0, height: 0, marginTop: 0 }}
+              animate={{ opacity: 1, height: 'auto', marginTop: 16 }}
+              exit={{ opacity: 0, height: 0, marginTop: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="flex flex-col border-t border-white/20 pt-4 overflow-hidden"
+            >
+              <div className="flex items-center justify-between gap-4 w-full overflow-x-auto pb-2 scrollbar-hide">
+                {data.hourly.map((hour, i) => (
+                  <div key={i} className="flex flex-col items-center gap-1 min-w-[50px]">
+                    <span className="text-[11px] font-medium text-white/70">{hour.time}</span>
+                    <img src={`https://openweathermap.org/img/wn/${hour.icon}.png`} alt="icon" className="w-8 h-8" />
+                    <span className="text-sm font-bold">{hour.temp}°</span>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="mt-4 flex flex-col gap-1 pb-1">
+                <span className="text-xs text-white/70">Forecast Insight</span>
+                <span className="text-sm font-bold text-white">Expect {data.hourly[0].temp}° and {data.condition.toLowerCase()} soon.</span>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
       ) : (
         <div className="text-white/80 text-sm font-medium">Weather data unavailable (Check proxy/API key).</div>
