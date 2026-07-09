@@ -50,9 +50,9 @@ export default function WeatherEffects({ condition }) {
     return (
       <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden opacity-100 rounded-[24px]">
         {/* Left Cloud Bank */}
-        <div className="absolute top-[-40px] left-[-10%] w-[60%] h-32 bg-white/40 blur-2xl rounded-[100px] animate-cloud-slow" />
+        <div className="absolute top-[-30px] left-[0%] w-[50%] h-16 bg-white/60 blur-xl rounded-[100px] animate-cloud-slow" />
         {/* Right Cloud Bank */}
-        <div className="absolute top-[-20px] right-[-10%] w-[70%] h-40 bg-white/30 blur-3xl rounded-[100px] animate-cloud-fast" />
+        <div className="absolute top-[-20px] right-[-10%] w-[60%] h-16 bg-white/50 blur-xl rounded-[100px] animate-cloud-fast" />
       </div>
     );
   }
