@@ -49,8 +49,10 @@ export default function WeatherEffects({ condition }) {
   if (condition === 'Clouds') {
     return (
       <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden opacity-100 rounded-[24px]">
-        <div className="absolute top-[-10%] left-[-10%] w-48 h-48 bg-white/40 blur-2xl rounded-full animate-cloud-slow" />
-        <div className="absolute top-[40%] right-[-10%] w-64 h-64 bg-white/30 blur-3xl rounded-full animate-cloud-fast" />
+        {/* Left Cloud Bank */}
+        <div className="absolute top-[-40px] left-[-10%] w-[60%] h-32 bg-white/40 blur-2xl rounded-[100px] animate-cloud-slow" />
+        {/* Right Cloud Bank */}
+        <div className="absolute top-[-20px] right-[-10%] w-[70%] h-40 bg-white/30 blur-3xl rounded-[100px] animate-cloud-fast" />
       </div>
     );
   }
