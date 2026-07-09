@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
 import { Newspaper } from 'lucide-react';
+import Card from './Card';
 import { fetchNews } from '../../lib/news';
 import { getCache, setCache } from '../../lib/cache';
 
@@ -41,42 +41,50 @@ export default function TechNewsCard({ timeOfDay = 'evening' }) {
   const subTextColor = isLight ? "text-[#6E6E6E]" : "text-[#A0A0A0]";
 
   return (
-    <motion.div 
-      whileHover={{ y: -4, scale: 1.01 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-      className={`w-full rounded-[24px] ${cardBg} p-6 flex flex-col gap-4 shadow-lg`}
-    >
+    <div className="flex flex-col gap-3 w-full">
       {loading ? (
-        <div className="animate-pulse flex flex-col gap-4">
-          <div className={`h-4 ${isLight ? 'bg-black/5' : 'bg-white/10'} rounded w-full`}></div>
-          <div className={`h-4 ${isLight ? 'bg-black/5' : 'bg-white/10'} rounded w-5/6`}></div>
-          <div className={`h-4 ${isLight ? 'bg-black/5' : 'bg-white/10'} rounded w-full`}></div>
-        </div>
+        <Card timeOfDay={timeOfDay} className="p-4 flex flex-col gap-4">
+          <div className="animate-pulse flex flex-col gap-4">
+            <div className={`h-4 ${isLight ? 'bg-black/5' : 'bg-white/10'} rounded w-1/3`}></div>
+            <div className={`h-4 ${isLight ? 'bg-black/5' : 'bg-white/10'} rounded w-full`}></div>
+            <div className={`h-4 ${isLight ? 'bg-black/5' : 'bg-white/10'} rounded w-5/6`}></div>
+          </div>
+        </Card>
       ) : articles && articles.length > 0 ? (
-        <ul className="flex flex-col gap-4">
-          {articles.map((article, idx) => (
-            <li key={idx} className="flex flex-col gap-1 group cursor-pointer" onClick={() => window.open(article.link, '_blank')}>
-              <span className={`${textColor} font-medium text-[15px] line-clamp-2 leading-tight group-hover:text-blue-500 transition-colors`}>
-                {article.title}
-              </span>
-              {article.excerpt && (
-                <p className={`text-[13px] ${subTextColor} font-normal line-clamp-3 mt-1 leading-snug`}>
-                  {article.excerpt}
-                </p>
-              )}
-              <div className={`flex items-center gap-2 text-xs ${subTextColor} font-medium mt-1.5`}>
-                <span className="text-blue-500">{article.source}</span>
-                <span>•</span>
-                <span>{timeAgo(article.publishedTime)}</span>
-              </div>
-            </li>
-          ))}
-        </ul>
+        articles.map((article, idx) => (
+          <Card 
+            key={idx} 
+            timeOfDay={timeOfDay} 
+            className="p-4 flex flex-col gap-1 group" 
+            onClick={() => window.open(article.link, '_blank')}
+          >
+            {/* Row 1: Source + timestamp */}
+            <div className={`flex items-center gap-2 text-xs ${subTextColor} font-medium`}>
+              <span className="text-blue-500">{article.source}</span>
+              <span>•</span>
+              <span>{timeAgo(article.publishedTime)}</span>
+            </div>
+            
+            {/* Row 2: Headline */}
+            <span className={`${textColor} font-bold text-[15px] line-clamp-2 leading-tight group-hover:text-blue-500 transition-colors mt-1`}>
+              {article.title}
+            </span>
+            
+            {/* Row 3: Snippet (clamp to 2 lines) */}
+            {article.excerpt && (
+              <p className={`text-[13px] ${subTextColor} font-normal line-clamp-2 mt-1 leading-snug`}>
+                {article.excerpt}
+              </p>
+            )}
+          </Card>
+        ))
       ) : (
-        <div className={`${subTextColor} text-sm font-medium`}>
-          Cannot load Tech news right now.
-        </div>
+        <Card timeOfDay={timeOfDay} className="p-4">
+          <div className={`${subTextColor} text-sm font-medium`}>
+            Cannot load Tech news right now.
+          </div>
+        </Card>
       )}
-    </motion.div>
+    </div>
   );
 }
