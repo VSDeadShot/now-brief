@@ -11,7 +11,7 @@ export default function WeatherEffects({ condition }) {
         {[...Array(15)].map((_, i) => (
           <div 
             key={i}
-            className="absolute bg-white/40 animate-rain w-[2px] rounded-full"
+            className="absolute bg-white/80 animate-rain w-[2px] rounded-full"
             style={{
               left: `${Math.random() * 100}%`,
               top: `-40px`,
@@ -31,7 +31,7 @@ export default function WeatherEffects({ condition }) {
         {[...Array(15)].map((_, i) => (
           <div 
             key={i}
-            className="absolute bg-white/60 animate-snow rounded-full"
+            className="absolute bg-white/90 animate-snow rounded-full"
             style={{
               left: `${Math.random() * 100}%`,
               top: `-10px`,
@@ -48,9 +48,9 @@ export default function WeatherEffects({ condition }) {
 
   if (condition === 'Clouds') {
     return (
-      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden opacity-30 rounded-[24px]">
-        <div className="absolute top-[-20%] left-[-10%] w-32 h-32 bg-white/20 blur-2xl rounded-full animate-cloud-slow" />
-        <div className="absolute top-[30%] right-[-10%] w-40 h-40 bg-white/10 blur-3xl rounded-full animate-cloud-fast" />
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden opacity-100 rounded-[24px]">
+        <div className="absolute top-[-10%] left-[-10%] w-48 h-48 bg-white/40 blur-2xl rounded-full animate-cloud-slow" />
+        <div className="absolute top-[40%] right-[-10%] w-64 h-64 bg-white/30 blur-3xl rounded-full animate-cloud-fast" />
       </div>
     );
   }
