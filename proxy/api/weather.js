@@ -22,16 +22,22 @@ export default async function handler(req, res) {
   }
 
   try {
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&appid=${apiKey}`;
-    const response = await fetch(url);
+    const currentUrl = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&appid=${apiKey}`;
+    const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(city)}&units=metric&appid=${apiKey}`;
     
-    if (!response.ok) {
-      const errorData = await response.json();
-      return res.status(response.status).json({ error: 'Failed to fetch weather', details: errorData });
+    const [currentResponse, forecastResponse] = await Promise.all([
+      fetch(currentUrl),
+      fetch(forecastUrl)
+    ]);
+    
+    if (!currentResponse.ok || !forecastResponse.ok) {
+      return res.status(500).json({ error: 'Failed to fetch weather data' });
     }
 
-    const data = await response.json();
-    return res.status(200).json(data);
+    const currentData = await currentResponse.json();
+    const forecastData = await forecastResponse.json();
+
+    return res.status(200).json({ current: currentData, forecast: forecastData });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }

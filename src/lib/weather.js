@@ -1,6 +1,6 @@
 // During development, we'll point to the local Vercel dev server.
 // When deploying to production, this should be updated to your Vercel project URL.
-const PROXY_URL = 'https://proxy-gamma-three-97.vercel.app';
+const PROXY_URL = 'http://localhost:3000'; // Using local proxy for testing new forecast feature
 
 export async function fetchWeather(city = 'Jaipur') {
   try {
@@ -8,14 +8,22 @@ export async function fetchWeather(city = 'Jaipur') {
     if (!res.ok) {
       throw new Error('Weather fetch failed');
     }
-    const data = await res.json();
+    const { current, forecast } = await res.json();
     
+    // Process forecast to get next 4 intervals (3-hour intervals)
+    const hourly = forecast.list.slice(0, 4).map(item => ({
+      time: new Date(item.dt * 1000).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }),
+      temp: Math.round(item.main.temp),
+      icon: item.weather[0].icon
+    }));
+
     return {
-      temp: Math.round(data.main.temp),
-      condition: data.weather[0].main,
-      description: data.weather[0].description,
-      icon: data.weather[0].icon,
-      city: data.name
+      temp: Math.round(current.main.temp),
+      condition: current.weather[0].main,
+      description: current.weather[0].description,
+      icon: current.weather[0].icon,
+      city: current.name,
+      hourly
     };
   } catch (error) {
     console.error("Weather error:", error);
