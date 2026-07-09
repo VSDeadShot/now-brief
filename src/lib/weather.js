@@ -11,11 +11,14 @@ export async function fetchWeather(city = 'Jaipur') {
     const { current, forecast } = await res.json();
     
     // Process forecast to get next 4 intervals (3-hour intervals)
-    const hourly = forecast.list.slice(0, 4).map(item => ({
-      time: new Date(item.dt * 1000).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }),
-      temp: Math.round(item.main.temp),
-      icon: item.weather[0].icon
-    }));
+    let hourly = [];
+    if (forecast && forecast.list) {
+      hourly = forecast.list.slice(0, 4).map(item => ({
+        time: new Date(item.dt * 1000).toLocaleTimeString([], { hour: 'numeric' }),
+        temp: Math.round(item.main.temp),
+        icon: item.weather[0].icon
+      }));
+    }
 
     return {
       temp: Math.round(current.main.temp),
