@@ -32,7 +32,10 @@ export default function DsaReviewCard({ timeOfDay = 'evening' }) {
   const subTextColor = isLight ? "text-[#6E6E6E]" : "text-[#A0A0A0]";
 
   return (
-    <Card timeOfDay={timeOfDay}>
+    <Card 
+      timeOfDay={timeOfDay} 
+      onClick={() => window.open('https://trackingdsa.vercel.app/review', '_blank')}
+    >
       <div className={`text-xs font-bold uppercase tracking-wider ${subTextColor} opacity-70`}>DSA Tracker</div>
       {loading ? (
         <div className="animate-pulse flex flex-col gap-2">
