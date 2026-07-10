@@ -107,11 +107,6 @@ export default function YoutubeCard({ timeOfDay = 'evening' }) {
             {/* Gradient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
 
-            {/* YouTube Logo in top right */}
-            <div className="absolute top-4 right-4 bg-[#FF0000] rounded-lg p-1.5 shadow-lg">
-              <Play size={16} fill="white" className="text-white" />
-            </div>
-
             {/* Content at Bottom */}
             <div className="absolute bottom-0 left-0 right-0 p-5 flex flex-col gap-1.5 pb-8">
               <motion.h3 
