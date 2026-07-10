@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import weatherHandler from './api/weather.js';
 import dsaHandler from './api/dsa-tracker.js';
 import newsHandler from './api/news.js';
+import youtubeHandler from './api/youtube.js';
 
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -28,6 +29,11 @@ app.get('/api/dsa-tracker', async (req, res) => {
 app.get('/api/news', async (req, res) => {
   req.query = req.query || {};
   await newsHandler(req, res);
+});
+
+app.get('/api/youtube', async (req, res) => {
+  req.query = req.query || {};
+  await youtubeHandler(req, res);
 });
 
 app.listen(3000, () => {

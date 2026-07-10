@@ -5,6 +5,7 @@ import DsaReviewCard from './components/DsaReviewCard';
 import OmniTaskCard from './components/OmniTaskCard';
 import SamsungNewsCard from './components/SamsungNewsCard';
 import TechNewsCard from './components/TechNewsCard';
+import YoutubeCard from './components/YoutubeCard';
 
 export default function NewTab() {
   const now = new Date();
@@ -92,6 +93,9 @@ export default function NewTab() {
               <SamsungNewsCard timeOfDay={timeOfDay} />
               <TechNewsCard timeOfDay={timeOfDay} />
             </div>
+
+            {/* YouTube Section */}
+            <YoutubeCard timeOfDay={timeOfDay} />
           </div>
           
         </div>
