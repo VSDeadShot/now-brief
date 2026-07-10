@@ -134,7 +134,15 @@ export default function WeatherCard({ timeOfDay = 'evening' }) {
         </AnimatePresence>
         </div>
         ) : (
-          <div className="relative z-10 text-white/80 text-sm font-medium">Weather data unavailable (Check proxy/API key).</div>
+          <div className="relative z-10 text-white/80 text-sm font-medium flex flex-col gap-2">
+            <span>Weather data unavailable for "{city}". Check city name or API key.</span>
+            <button 
+              onClick={(e) => { e.stopPropagation(); setCity('Jaipur'); setTempCity('Jaipur'); localStorage.setItem('weather_city', 'Jaipur'); }}
+              className="px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-md w-max mt-1 transition-colors text-white"
+            >
+              Reset to Default City
+            </button>
+          </div>
         )}
       </div>
     </Card>
