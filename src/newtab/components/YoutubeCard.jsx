@@ -82,14 +82,7 @@ export default function YoutubeCard({ timeOfDay = 'evening' }) {
         Check out these <span className="text-blue-400 font-normal">YouTube videos.</span>
       </div>
 
-      <Card 
-        className="relative overflow-hidden h-[240px] !p-0 shadow-xl cursor-pointer group"
-        onClick={() => {
-          if (videos[currentIndex]) {
-            window.open(videos[currentIndex].link, '_blank');
-          }
-        }}
-      >
+      <Card className="relative overflow-hidden h-[240px] !p-0 shadow-xl group">
         {loading && !videos.length ? (
           <div className={`w-full h-full animate-pulse ${isLight ? 'bg-black/5' : 'bg-white/5'}`}></div>
         ) : videos.length > 0 ? (
@@ -105,7 +98,17 @@ export default function YoutubeCard({ timeOfDay = 'evening' }) {
             />
             
             {/* Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent pointer-events-none"></div>
+            
+            {/* Clickable Overlay */}
+            <div 
+              className="absolute inset-0 cursor-pointer" 
+              onClick={() => {
+                if (videos[currentIndex]) {
+                  window.open(videos[currentIndex].link, '_blank');
+                }
+              }}
+            ></div>
 
             {/* Navigation Arrows */}
             <div className="absolute inset-y-0 left-2 flex items-center" onClick={(e) => { e.stopPropagation(); e.preventDefault(); }}>
