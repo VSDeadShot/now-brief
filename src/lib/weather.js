@@ -8,7 +8,12 @@ export async function fetchWeather(city = 'Jaipur') {
     if (!res.ok) {
       throw new Error('Weather fetch failed');
     }
-    const { current, forecast } = await res.json();
+    const data = await res.json();
+    
+    // Check if proxy returned new format { current, forecast } or old format (raw OpenWeather data)
+    const isNewFormat = data.current !== undefined;
+    const current = isNewFormat ? data.current : data;
+    const forecast = isNewFormat ? data.forecast : null;
     
     // Process forecast to get next 4 intervals (3-hour intervals)
     let hourly = [];
