@@ -81,6 +81,9 @@ export default function NewTab() {
               </p>
               <GithubStreakCard timeOfDay={timeOfDay} />
             </div>
+
+            {/* YouTube Section */}
+            <YoutubeCard timeOfDay={timeOfDay} />
           </div>
 
           {/* Right Column */}
@@ -93,9 +96,6 @@ export default function NewTab() {
               <SamsungNewsCard timeOfDay={timeOfDay} />
               <TechNewsCard timeOfDay={timeOfDay} />
             </div>
-
-            {/* YouTube Section */}
-            <YoutubeCard timeOfDay={timeOfDay} />
           </div>
           
         </div>
