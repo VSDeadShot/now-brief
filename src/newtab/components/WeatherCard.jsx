@@ -107,7 +107,7 @@ export default function WeatherCard({ timeOfDay = 'evening' }) {
 
         {/* Expanded Forecast View */}
         <AnimatePresence>
-          {isExpanded && data.hourly && (
+          {isExpanded && data.hourly && data.hourly.length > 0 && (
             <motion.div 
               initial={{ opacity: 0, height: 0, marginTop: 0 }}
               animate={{ opacity: 1, height: 'auto', marginTop: 16 }}
