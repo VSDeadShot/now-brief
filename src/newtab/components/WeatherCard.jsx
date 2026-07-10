@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { CloudRain } from 'lucide-react';
+import React, { useEffect, useState, useRef } from 'react';
+import { CloudRain, MapPin, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Card from './Card';
 import WeatherEffects from './WeatherEffects';
@@ -7,27 +7,49 @@ import { fetchWeather } from '../../lib/weather';
 import { getCache, setCache } from '../../lib/cache';
 
 export default function WeatherCard({ timeOfDay = 'evening' }) {
+  const [city, setCity] = useState(() => localStorage.getItem('weather_city') || 'Jaipur');
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
+  
+  const [isEditingCity, setIsEditingCity] = useState(false);
+  const [tempCity, setTempCity] = useState(city);
+  const inputRef = useRef(null);
 
   useEffect(() => {
     async function loadData() {
-      const cached = await getCache('weather_data');
+      setLoading(true);
+      const cached = await getCache(`weather_data_${city}`);
       if (cached) {
         setData(cached);
         setLoading(false);
       }
 
-      const freshData = await fetchWeather('Jaipur');
+      const freshData = await fetchWeather(city);
       if (freshData) {
         setData(freshData);
-        setCache('weather_data', freshData);
+        setCache(`weather_data_${city}`, freshData);
       }
       setLoading(false);
     }
     loadData();
-  }, []);
+  }, [city]);
+
+  const handleCitySave = (e) => {
+    e.stopPropagation();
+    if (tempCity.trim() && tempCity !== city) {
+      const newCity = tempCity.trim();
+      setCity(newCity);
+      localStorage.setItem('weather_city', newCity);
+    }
+    setIsEditingCity(false);
+  };
+
+  const handleCityEdit = (e) => {
+    e.stopPropagation();
+    setIsEditingCity(true);
+    setTimeout(() => inputRef.current?.focus(), 50);
+  };
 
   let bgClass = "bg-gradient-to-br from-[#403B50] to-[#514B63]";
   if (timeOfDay === 'morning') bgClass = "bg-gradient-to-br from-[#4A90E2] to-[#5CA0F2]";
@@ -57,9 +79,30 @@ export default function WeatherCard({ timeOfDay = 'evening' }) {
             alt={data.condition}
             className="w-8 h-8 opacity-90 brightness-110 saturate-150"
           />
-          <span className="text-sm font-medium text-white/90 capitalize">
-            {data.description} in {data.city}
-          </span>
+          {isEditingCity ? (
+            <div className="flex items-center gap-1 bg-white/20 rounded-md px-2 py-1" onClick={e => e.stopPropagation()}>
+              <MapPin size={14} className="text-white/70" />
+              <input
+                ref={inputRef}
+                type="text"
+                value={tempCity}
+                onChange={(e) => setTempCity(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleCitySave(e)}
+                className="bg-transparent text-sm font-medium text-white outline-none w-24 placeholder-white/50"
+                placeholder="City name..."
+              />
+              <button onClick={handleCitySave} className="p-1 hover:bg-white/20 rounded-md">
+                <Check size={14} className="text-white" />
+              </button>
+            </div>
+          ) : (
+            <span className="text-sm font-medium text-white/90 capitalize flex items-center gap-1 group">
+              {data.description} in {data.city}
+              <button onClick={handleCityEdit} className="opacity-0 group-hover:opacity-100 p-1 hover:bg-white/20 rounded-md transition-opacity">
+                <MapPin size={12} className="text-white/70" />
+              </button>
+            </span>
+          )}
         </div>
 
         {/* Expanded Forecast View */}
