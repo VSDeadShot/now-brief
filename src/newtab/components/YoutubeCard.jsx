@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import Card from './Card';
-import { Play } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { getCache, setCache } from '../../lib/cache';
 
 // Using local dev server for now until we deploy the proxy
@@ -106,6 +106,26 @@ export default function YoutubeCard({ timeOfDay = 'evening' }) {
             
             {/* Gradient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+
+            {/* Navigation Arrows */}
+            <button 
+              onClick={(e) => {
+                e.stopPropagation();
+                setCurrentIndex((prev) => (prev > 0 ? prev - 1 : videos.length - 1));
+              }}
+              className="absolute left-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/30 hover:bg-black/50 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-200"
+            >
+              <ChevronLeft size={20} />
+            </button>
+            <button 
+              onClick={(e) => {
+                e.stopPropagation();
+                setCurrentIndex((prev) => (prev < videos.length - 1 ? prev + 1 : 0));
+              }}
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/30 hover:bg-black/50 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-200"
+            >
+              <ChevronRight size={20} />
+            </button>
 
             {/* Content at Bottom */}
             <div className="absolute bottom-0 left-0 right-0 p-5 flex flex-col gap-1.5 pb-8">
