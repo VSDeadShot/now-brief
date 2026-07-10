@@ -98,7 +98,7 @@ export default function WeatherCard({ timeOfDay = 'evening' }) {
           ) : (
             <span className="text-sm font-medium text-white/90 capitalize flex items-center gap-1 group">
               {data.description} in {data.city}
-              <button onClick={handleCityEdit} className="opacity-0 group-hover:opacity-100 p-1 hover:bg-white/20 rounded-md transition-opacity">
+              <button onClick={handleCityEdit} className="opacity-0 group-hover:opacity-100 p-1 hover:bg-white/20 rounded-md transition-opacity duration-75">
                 <MapPin size={12} className="text-white/70" />
               </button>
             </span>
