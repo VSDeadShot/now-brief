@@ -1,8 +1,6 @@
 export async function fetchGithubActivity(username) {
   try {
-    const res = await fetch(`https://api.github.com/users/${username}/events/public?per_page=100&t=${Date.now()}`, {
-      headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
-    });
+    const res = await fetch(`https://api.github.com/users/${username}/events/public?per_page=100`);
     if (!res.ok) throw new Error('Failed to fetch GitHub events');
     const events = await res.json();
     
