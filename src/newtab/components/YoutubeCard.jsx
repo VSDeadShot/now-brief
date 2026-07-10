@@ -111,27 +111,27 @@ export default function YoutubeCard({ timeOfDay = 'evening' }) {
             ></div>
 
             {/* Navigation Arrows */}
-            <div className="absolute inset-y-0 left-2 flex items-center" onClick={(e) => { e.stopPropagation(); e.preventDefault(); }}>
+            <div className="absolute inset-y-0 left-2 flex items-center pointer-events-none z-10">
               <button 
                 onClick={(e) => {
                   e.stopPropagation();
                   e.preventDefault();
                   setCurrentIndex((prev) => (prev > 0 ? prev - 1 : videos.length - 1));
                 }}
-                className="p-2 rounded-full bg-black/30 hover:bg-black/50 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-200"
+                className="pointer-events-auto p-2 rounded-full bg-black/30 hover:bg-black/50 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-200"
               >
                 <ChevronLeft size={20} />
               </button>
             </div>
             
-            <div className="absolute inset-y-0 right-2 flex items-center" onClick={(e) => { e.stopPropagation(); e.preventDefault(); }}>
+            <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none z-10">
               <button 
                 onClick={(e) => {
                   e.stopPropagation();
                   e.preventDefault();
                   setCurrentIndex((prev) => (prev < videos.length - 1 ? prev + 1 : 0));
                 }}
-                className="p-2 rounded-full bg-black/30 hover:bg-black/50 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-200"
+                className="pointer-events-auto p-2 rounded-full bg-black/30 hover:bg-black/50 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-200"
               >
                 <ChevronRight size={20} />
               </button>
