@@ -21,7 +21,7 @@ export default function SpotifyCard() {
   };
 
   return (
-    <Card className="relative overflow-hidden p-5 group text-white h-[180px] flex flex-col justify-between rounded-[28px]">
+    <Card className="relative overflow-hidden p-5 pb-6 group text-white min-h-[180px] flex flex-col justify-between rounded-[28px]">
       {/* Background is a deep purple/indigo gradient matching the screenshot */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#2a293e] to-[#1c1b2b] z-0" />
 
@@ -69,24 +69,22 @@ export default function SpotifyCard() {
           
           {/* Played Track Container (Clipped to Progress Percentage) */}
           <div 
-            className="absolute bottom-[2px] left-0 flex items-end overflow-hidden h-[30px] rounded-l-full"
+            className="absolute bottom-[2px] left-0 flex items-end overflow-hidden h-[30px]"
             style={{ width: `${song.progress}%` }}
           >
-            {/* Animated SVG Waveform (No horizontal panning to prevent jumping) */}
+            {/* Animated SVG Waveform */}
             <svg 
-              className="absolute left-0 bottom-0 h-[30px] w-full"
-              viewBox="0 0 100 30"
+              className="absolute left-0 bottom-[2px] h-[28px] w-full"
+              viewBox="0 0 100 28"
               preserveAspectRatio="none"
             >
               <defs>
-                {/* Dynamic foreground wave gradient based on album art colors */}
                 <linearGradient id="waveGradientFront" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stopColor={song.colors.secondary} />
                   <stop offset="50%" stopColor={song.colors.accent} />
                   <stop offset="100%" stopColor={song.colors.primary} />
                 </linearGradient>
                 
-                {/* Dynamic background wave gradient */}
                 <linearGradient id="waveGradientBack" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stopColor={song.colors.secondary} stopOpacity="0.4" />
                   <stop offset="50%" stopColor={song.colors.primary} stopOpacity="0.6" />
@@ -94,27 +92,28 @@ export default function SpotifyCard() {
                 </linearGradient>
               </defs>
 
-              {/* Back layered wave (translucent) */}
               <motion.path 
-                d="M 0 30 C 10 30, 20 8, 50 15 C 80 22, 90 8, 100 12 L 100 30 L 0 30 Z" 
+                d="M 0 28 C 10 28, 20 8, 50 15 C 80 22, 90 8, 100 12 L 100 28 L 0 28 Z" 
                 fill="url(#waveGradientBack)"
                 animate={isPlaying ? { scaleY: [1, 1.25, 1], opacity: [0.7, 1, 0.7] } : { scaleY: 1, opacity: 0.7 }}
                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                 style={{ originY: 1 }}
               />
 
-              {/* Front layered wave (solid gradient) */}
               <motion.path 
-                d="M 0 30 C 15 30, 25 15, 50 18 C 75 21, 85 12, 100 16 L 100 30 L 0 30 Z" 
+                d="M 0 28 C 15 28, 25 15, 50 18 C 75 21, 85 12, 100 16 L 100 28 L 0 28 Z" 
                 fill="url(#waveGradientFront)" 
                 animate={isPlaying ? { scaleY: [1, 1.15, 1] } : { scaleY: 1 }}
                 transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
                 style={{ originY: 1 }}
               />
-              
-              {/* Thick Base Line */}
-              <rect x="0" y="26" width="100" height="4" fill="url(#waveGradientFront)" rx="2" />
             </svg>
+
+            {/* Perfect HTML Base Line to prevent SVG radius stretching */}
+            <div 
+              className="absolute bottom-0 left-0 w-full h-[4px] rounded-full"
+              style={{ background: `linear-gradient(to right, ${song.colors.secondary}, ${song.colors.accent}, ${song.colors.primary})` }}
+            />
           </div>
 
           {/* Scrubber Knob with Glowing Aura */}
@@ -136,7 +135,7 @@ export default function SpotifyCard() {
       </div>
 
       {/* Playback Controls */}
-      <div className="relative z-10 flex justify-between items-center px-4 mt-2">
+      <div className="relative z-10 flex justify-between items-center px-4 mt-4">
         <button className="text-white hover:text-white/80 transition-colors">
           <ThumbsUp size={20} strokeWidth={2} />
         </button>
