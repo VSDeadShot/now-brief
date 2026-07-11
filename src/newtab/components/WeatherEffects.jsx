@@ -72,16 +72,33 @@ export default function WeatherEffects({ condition }) {
     return (
       <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden rounded-[24px] bg-slate-900/20">
         <div className="absolute inset-[-50%] w-[200%] h-[200%] rotate-[15deg]">
-          {[...Array(40)].map((_, i) => (
+          {[...Array(50)].map((_, i) => (
             <div 
               key={i}
-              className="absolute bg-white/60 animate-rain w-[1.5px] rounded-full"
+              className="absolute bg-white/50 animate-rain w-[1px] rounded-full"
               style={{
                 left: `${Math.random() * 100}%`,
                 top: `-50px`,
-                height: `${20 + Math.random() * 30}px`,
+                height: `${10 + Math.random() * 15}px`,
                 animationDelay: `${Math.random() * 1}s`,
                 animationDuration: `${0.4 + Math.random() * 0.3}s`
+              }}
+            />
+          ))}
+        </div>
+        
+        {/* Splash effect at the bottom */}
+        <div className="absolute bottom-0 left-0 w-full h-8 overflow-hidden z-10">
+          {[...Array(20)].map((_, i) => (
+            <div 
+              key={`splash-${i}`}
+              className="absolute bottom-1 bg-white/60 rounded-full animate-splash"
+              style={{
+                left: `${Math.random() * 100}%`,
+                width: `${1.5 + Math.random() * 1.5}px`,
+                height: `${1 + Math.random() * 1}px`,
+                animationDelay: `${Math.random() * 2}s`,
+                animationDuration: `${0.3 + Math.random() * 0.2}s`
               }}
             />
           ))}
@@ -138,16 +155,33 @@ export default function WeatherEffects({ condition }) {
         
         {/* Heavy Rain */}
         <div className="absolute inset-[-50%] w-[200%] h-[200%] rotate-[15deg]">
-          {[...Array(60)].map((_, i) => (
+          {[...Array(80)].map((_, i) => (
             <div 
               key={`rain-${i}`}
-              className="absolute bg-white/80 animate-rain w-[2px] rounded-full"
+              className="absolute bg-white/70 animate-rain w-[1.5px] rounded-full"
               style={{
                 left: `${Math.random() * 100}%`,
                 top: `-50px`,
-                height: `${30 + Math.random() * 40}px`,
+                height: `${15 + Math.random() * 20}px`,
                 animationDelay: `${Math.random() * 0.8}s`,
                 animationDuration: `${0.3 + Math.random() * 0.2}s`
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Heavy Splash effect */}
+        <div className="absolute bottom-0 left-0 w-full h-8 overflow-hidden z-10">
+          {[...Array(35)].map((_, i) => (
+            <div 
+              key={`tsplash-${i}`}
+              className="absolute bottom-1 bg-white/80 rounded-full animate-splash"
+              style={{
+                left: `${Math.random() * 100}%`,
+                width: `${2 + Math.random() * 2}px`,
+                height: `${1 + Math.random() * 1.5}px`,
+                animationDelay: `${Math.random() * 1.5}s`,
+                animationDuration: `${0.2 + Math.random() * 0.2}s`
               }}
             />
           ))}
