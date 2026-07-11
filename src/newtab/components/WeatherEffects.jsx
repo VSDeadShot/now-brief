@@ -145,14 +145,43 @@ export default function WeatherEffects({ condition }) {
 
   if (condition === 'Thunderstorm') {
     return (
-      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden rounded-[24px] bg-slate-900/40">
-        {/* Lightning flashes */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden rounded-[24px] bg-slate-900/60">
+        
+        {/* Dark Thunderstorm Clouds */}
+        <motion.div
+          animate={{ x: ['-10%', '0%', '-10%'] }}
+          transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+          className="absolute top-[-10%] left-[-20%] w-[150%] h-[60%] bg-black/40 blur-[40px] rounded-b-full"
+        />
+        <motion.div
+          animate={{ x: ['0%', '-20%', '0%'] }}
+          transition={{ duration: 45, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-[0%] left-[10%] w-[120%] h-[50%] bg-slate-800/50 blur-[35px] rounded-b-full"
+        />
+        <motion.div
+          animate={{ x: ['-30%', '5%', '-30%'] }}
+          transition={{ duration: 35, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-0 left-[-40%] w-[180%] h-[65%] bg-slate-900/60 blur-[30px] rounded-b-[100px]"
+        />
+
+        {/* Lightning flashes (Background Illumination) */}
         <motion.div 
-          animate={{ backgroundColor: ['rgba(255,255,255,0)', 'rgba(255,255,255,0.8)', 'rgba(255,255,255,0)', 'rgba(255,255,255,0)', 'rgba(255,255,255,0.5)', 'rgba(255,255,255,0)'] }}
-          transition={{ duration: 7, repeat: Infinity, ease: "linear", delay: 2 }}
-          className="absolute inset-0 rounded-[24px]" 
+          animate={{ opacity: [0, 1, 0, 0, 0.6, 0, 0, 0, 0, 0, 0.8, 0] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+          className="absolute inset-0 bg-white/40 mix-blend-overlay rounded-[24px]" 
         />
         
+        {/* Actual Lightning Bolt SVG */}
+        <motion.div 
+          animate={{ opacity: [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+          className="absolute top-[-20px] right-[20%] w-32 h-32 text-yellow-300 drop-shadow-[0_0_15px_rgba(253,224,71,0.8)]"
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full opacity-80 transform -rotate-12">
+            <path d="M11 21.999c-.198 0-.392-.058-.555-.166-.312-.208-.475-.572-.412-.942l1.528-8.891H6.5c-.389 0-.74-.225-.905-.577-.165-.353-.105-.773.155-1.066l9-10c.264-.294.685-.369 1.037-.184.352.184.551.554.49 9.42l-1.528 8.891h5.062c.389 0 .74.225.905.577.165.353.105.773-.155 1.066l-9 10c-.173.192-.416.299-.667.299z" />
+          </svg>
+        </motion.div>
+
         {/* Heavy Rain */}
         <div className="absolute inset-[-50%] w-[200%] h-[200%] rotate-[15deg]">
           {[...Array(80)].map((_, i) => (
@@ -164,7 +193,7 @@ export default function WeatherEffects({ condition }) {
                 top: `-50px`,
                 height: `${15 + Math.random() * 20}px`,
                 animationDelay: `${Math.random() * 0.8}s`,
-                animationDuration: `${0.3 + Math.random() * 0.2}s`
+                animationDuration: `${0.2 + Math.random() * 0.2}s`
               }}
             />
           ))}
@@ -172,7 +201,7 @@ export default function WeatherEffects({ condition }) {
 
         {/* Heavy Splash effect */}
         <div className="absolute bottom-0 left-0 w-full h-8 overflow-hidden z-10">
-          {[...Array(35)].map((_, i) => (
+          {[...Array(40)].map((_, i) => (
             <div 
               key={`tsplash-${i}`}
               className="absolute bottom-1 bg-white/80 rounded-full animate-splash"
