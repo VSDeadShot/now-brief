@@ -83,9 +83,6 @@ export default function NewTab() {
               <GithubStreakCard timeOfDay={timeOfDay} />
             </div>
 
-            {/* Spotify Section */}
-            <SpotifyCard />
-
             {/* YouTube Section */}
             <YoutubeCard timeOfDay={timeOfDay} />
           </div>
@@ -99,6 +96,14 @@ export default function NewTab() {
               </p>
               <SamsungNewsCard timeOfDay={timeOfDay} />
               <TechNewsCard timeOfDay={timeOfDay} />
+            </div>
+
+            {/* Spotify Section */}
+            <div className="flex flex-col gap-3 w-full">
+              <p className="text-lg opacity-90">
+                Unwind with your <span className={highlightClass}>music</span>.
+              </p>
+              <SpotifyCard />
             </div>
           </div>
           
