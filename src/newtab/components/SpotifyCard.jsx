@@ -1,100 +1,131 @@
 import React, { useState } from 'react';
 import Card from './Card';
 import { motion } from 'framer-motion';
-import { Play, Pause, SkipBack, SkipForward } from 'lucide-react';
+import { Play, Pause, SkipBack, SkipForward, ThumbsUp } from 'lucide-react';
 
 export default function SpotifyCard() {
   const [isPlaying, setIsPlaying] = useState(true);
 
-  // Mock data for now to show the premium UI
+  // Mock data mimicking the Samsung Music widget screenshot exactly
   const song = {
-    title: "Starboy",
-    artist: "The Weeknd, Daft Punk",
-    albumArt: "https://i.scdn.co/image/ab67616d0000b2734718e2b124f79258be7bc452",
-    progress: 45 // percentage
+    title: "Nobody (from Kaiju No. 8)",
+    artist: "OneRepublic",
+    // We'll use a cool dark fantasy album art that matches the screenshot's vibe
+    albumArt: "https://i.scdn.co/image/ab67616d0000b273b64c0ed79c322b2707f1396b", 
+    progress: 58, // percentage (01:30 out of 02:34 is ~58%)
+    currentTime: "01:30",
+    totalTime: "02:34",
+    color: "#E86F36" // Signature orange from the screenshot
   };
 
   return (
-    <Card className="relative overflow-hidden p-4 group cursor-pointer text-white h-[140px]">
-      {/* Blurred Album Background */}
+    <Card className="relative overflow-hidden p-5 group cursor-pointer text-white min-h-[180px] flex flex-col justify-between rounded-3xl border border-white/10">
+      {/* Full Screen Album Art Background */}
       <div 
-        className="absolute inset-0 z-0 opacity-50 blur-xl scale-110 transition-transform duration-700 group-hover:scale-125"
+        className="absolute inset-0 z-0 opacity-70 transition-transform duration-700 group-hover:scale-105"
         style={{ 
           backgroundImage: `url(${song.albumArt})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center'
         }}
       />
-      {/* Gradient overlay for readability */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-0" />
+      {/* Heavy vignette for contrast like in screenshot */}
+      <div className="absolute inset-0 bg-black/60 z-0" />
 
-      {/* Content */}
-      <div className="relative z-10 flex flex-col h-full justify-between">
-        
-        {/* Top Header Row */}
-        <div className="flex justify-between items-start">
-          <div className="flex gap-3 items-center">
-            {/* Album Art Icon */}
-            <motion.div 
-              className="w-14 h-14 rounded-md overflow-hidden shadow-2xl relative flex-shrink-0"
-              whileHover={{ scale: 1.05 }}
-            >
-              <img src={song.albumArt} alt="Album Art" className="w-full h-full object-cover" />
-              {/* Playing Equalizer Animation overlay */}
-              {isPlaying && (
-                <div className="absolute inset-0 bg-black/30 flex items-center justify-center gap-[2px]">
-                  <motion.div animate={{ height: [4, 10, 4] }} transition={{ duration: 0.6, repeat: Infinity }} className="w-1 bg-white rounded-full" />
-                  <motion.div animate={{ height: [8, 14, 8] }} transition={{ duration: 0.6, repeat: Infinity, delay: 0.2 }} className="w-1 bg-white rounded-full" />
-                  <motion.div animate={{ height: [5, 12, 5] }} transition={{ duration: 0.6, repeat: Infinity, delay: 0.4 }} className="w-1 bg-white rounded-full" />
-                </div>
-              )}
-            </motion.div>
-            
-            {/* Track Info */}
-            <div className="flex flex-col min-w-0">
-              <h3 className="font-bold text-[15px] leading-tight truncate text-white drop-shadow-md">{song.title}</h3>
-              <p className="text-xs text-white/70 truncate drop-shadow-md">{song.artist}</p>
-            </div>
-          </div>
-
-          {/* Spotify Logo SVG */}
-          <div className="text-[#1DB954] w-6 h-6 flex-shrink-0 drop-shadow-md ml-2">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.54.6.3 1.02zm1.44-3.3c-.301.42-.84.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15.001 10.62 18.72 12.9c.42.18.6.78.24 1.14zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.781s.18-1.2.78-1.381c4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.239.54-.959.72-1.5.36h-.12z"/>
-            </svg>
-          </div>
+      {/* Top Header: Source & Cast Icon */}
+      <div className="relative z-10 flex justify-between items-center text-[12.5px] font-bold opacity-90 mb-4">
+        <span>This phone</span>
+        <div className="border-[1.5px] border-white rounded-full p-[3px]">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M2 16.1A5 5 0 0 1 5.9 20M2 12.05A9 9 0 0 1 9.95 20M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"/>
+            <line x1="2" y1="20" x2="2.01" y2="20"/>
+          </svg>
         </div>
-
-        {/* Controls & Progress */}
-        <div className="flex flex-col gap-2 mt-auto">
-          {/* Progress Bar */}
-          <div className="w-full h-1 bg-white/20 rounded-full overflow-hidden">
-            <motion.div 
-              className="h-full bg-white rounded-full"
-              initial={{ width: 0 }}
-              animate={{ width: `${song.progress}%` }}
-              transition={{ duration: 1 }}
-            />
-          </div>
-          
-          {/* Playback Controls */}
-          <div className="flex justify-between items-center px-4">
-            <button className="text-white/70 hover:text-white transition-colors p-1">
-              <SkipBack size={18} className="fill-current" />
-            </button>
-            <button 
-              onClick={(e) => { e.stopPropagation(); setIsPlaying(!isPlaying); }}
-              className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center hover:scale-105 transition-transform shadow-md"
-            >
-              {isPlaying ? <Pause size={16} className="fill-current" /> : <Play size={16} className="fill-current ml-0.5" />}
-            </button>
-            <button className="text-white/70 hover:text-white transition-colors p-1">
-              <SkipForward size={18} className="fill-current" />
-            </button>
-          </div>
-        </div>
-
       </div>
+
+      {/* Track Info (Centered) */}
+      <div className="relative z-10 flex justify-center items-center gap-1.5 mb-6">
+        {/* Tiny record/disc icon */}
+        <div className="w-[14px] h-[14px] rounded-full border-[2px] border-white flex items-center justify-center opacity-80">
+           <div className="w-1 h-1 bg-white rounded-full" />
+        </div>
+        <h3 className="font-bold text-[14px] truncate drop-shadow-md tracking-tight">
+          {song.title} <span className="font-medium opacity-80">• {song.artist}</span>
+        </h3>
+      </div>
+
+      {/* Samsung Style Wavy Progress Bar */}
+      <div className="relative z-10 w-full mb-5 mt-2">
+        {/* Background track line (gray) */}
+        <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-[4px] bg-white/30 rounded-full" />
+        
+        {/* The Animated Wave Container (clips to progress) */}
+        <div 
+          className="absolute top-1/2 -translate-y-1/2 left-0 flex items-center overflow-hidden"
+          style={{ width: `${song.progress}%`, height: '40px' }}
+        >
+          {/* Base active colored line */}
+          <div 
+            className="absolute top-1/2 -translate-y-1/2 left-0 w-full h-[4px] rounded-l-full" 
+            style={{ backgroundColor: song.color }}
+          />
+          
+          {/* Pulsing Wavy Mountain SVG (Faked Audio Equalizer) */}
+          {isPlaying && (
+            <motion.svg 
+              className="absolute left-[10%] bottom-[50%] w-[80%] h-[20px] opacity-70" 
+              style={{ color: song.color }}
+              viewBox="0 0 100 20" 
+              preserveAspectRatio="none"
+              animate={{ scaleY: [1, 2.5, 1], opacity: [0.6, 0.9, 0.6] }}
+              transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <path d="M0 20 Q 25 20, 50 0 T 100 20 Z" fill="currentColor" />
+            </motion.svg>
+          )}
+        </div>
+
+        {/* Scrubber Knob with White Ring */}
+        <div 
+          className="absolute top-1/2 -translate-y-1/2 w-[18px] h-[18px] rounded-full border-[3px] border-white shadow-[0_0_10px_rgba(0,0,0,0.5)] transform -translate-x-1/2"
+          style={{ left: `${song.progress}%`, backgroundColor: song.color }}
+        />
+        
+        {/* Timestamps */}
+        <div className="flex justify-between text-[11px] opacity-75 mt-[18px] font-medium">
+          <span>{song.currentTime}</span>
+          <span>{song.totalTime}</span>
+        </div>
+      </div>
+
+      {/* Playback Controls */}
+      <div className="relative z-10 flex justify-between items-center px-2">
+        <button className="text-white hover:scale-110 transition-transform">
+          <ThumbsUp size={20} strokeWidth={2.5} />
+        </button>
+        <button className="text-white hover:scale-110 transition-transform">
+          <SkipBack size={26} className="fill-current" strokeWidth={1} />
+        </button>
+        <button 
+          onClick={(e) => { e.stopPropagation(); setIsPlaying(!isPlaying); }}
+          className="text-white hover:scale-110 transition-transform active:scale-95"
+        >
+          {isPlaying ? <Pause size={30} className="fill-current" strokeWidth={1} /> : <Play size={30} className="fill-current" strokeWidth={1} />}
+        </button>
+        <button className="text-white hover:scale-110 transition-transform">
+          <SkipForward size={26} className="fill-current" strokeWidth={1} />
+        </button>
+        <button className="text-white hover:scale-110 transition-transform">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="16 3 21 3 21 8"></polyline>
+            <line x1="4" y1="20" x2="21" y2="3"></line>
+            <polyline points="21 16 21 21 16 21"></polyline>
+            <line x1="15" y1="15" x2="21" y2="21"></line>
+            <line x1="4" y1="4" x2="9" y2="9"></line>
+          </svg>
+        </button>
+      </div>
+
     </Card>
   );
 }
