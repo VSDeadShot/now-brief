@@ -41,28 +41,28 @@ export default function WeatherEffects({ condition }) {
         <motion.div
           animate={{ x: ['-10%', '0%', '-10%'] }}
           transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-          className="absolute top-[-50px] left-[-20%] w-[150%] h-40 bg-white/20 blur-[50px] rounded-b-full"
+          className="absolute top-[-10%] left-[-20%] w-[150%] h-[60%] bg-white/20 blur-[40px] rounded-b-full"
         />
         
         {/* Midground cloud layer 1 */}
         <motion.div
           animate={{ x: ['0%', '-20%', '0%'] }}
           transition={{ duration: 45, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[-20px] left-[10%] w-[120%] h-32 bg-white/30 blur-[40px] rounded-b-full"
+          className="absolute top-[0%] left-[10%] w-[120%] h-[50%] bg-white/30 blur-[35px] rounded-b-full"
         />
 
         {/* Midground cloud layer 2 */}
         <motion.div
           animate={{ x: ['-15%', '15%', '-15%'] }}
           transition={{ duration: 55, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[-10px] left-[-10%] w-[130%] h-32 bg-white/20 blur-[35px] rounded-b-full"
+          className="absolute top-[-5%] left-[-10%] w-[130%] h-[55%] bg-white/20 blur-[30px] rounded-b-full"
         />
         
         {/* Foreground dense cloud chunks */}
         <motion.div
           animate={{ x: ['-30%', '5%', '-30%'] }}
           transition={{ duration: 35, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[-30px] left-[-40%] w-[180%] h-40 bg-white/40 blur-[30px] rounded-b-[100px]"
+          className="absolute top-0 left-[-40%] w-[180%] h-[65%] bg-white/40 blur-[30px] rounded-b-[100px]"
         />
       </div>
     );
