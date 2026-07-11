@@ -6,6 +6,7 @@ import OmniTaskCard from './components/OmniTaskCard';
 import SamsungNewsCard from './components/SamsungNewsCard';
 import TechNewsCard from './components/TechNewsCard';
 import YoutubeCard from './components/YoutubeCard';
+import SpotifyCard from './components/SpotifyCard';
 
 export default function NewTab() {
   const now = new Date();
@@ -81,6 +82,9 @@ export default function NewTab() {
               </p>
               <GithubStreakCard timeOfDay={timeOfDay} />
             </div>
+
+            {/* Spotify Section */}
+            <SpotifyCard />
 
             {/* YouTube Section */}
             <YoutubeCard timeOfDay={timeOfDay} />
