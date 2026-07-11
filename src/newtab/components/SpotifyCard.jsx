@@ -60,72 +60,76 @@ export default function SpotifyCard() {
       </div>
 
       {/* Samsung Style Gradient Waveform Progress Bar */}
-      <div className="relative z-10 w-full mt-4">
-        {/* Unplayed Track (Gray) */}
-        <div className="absolute bottom-[2px] left-0 right-0 h-[4px] bg-white/20 rounded-full" />
+      <div className="relative z-10 w-full mt-2">
         
-        {/* Played Track Container (Clipped to Progress Percentage) */}
-        <div 
-          className="absolute bottom-[2px] left-0 flex items-end overflow-hidden h-[30px] rounded-l-full"
-          style={{ width: `${song.progress}%` }}
-        >
-          {/* Animated SVG Waveform (No horizontal panning to prevent jumping) */}
-          <svg 
-            className="absolute left-0 bottom-0 h-[30px] w-full"
-            viewBox="0 0 100 30"
-            preserveAspectRatio="none"
+        {/* Track Area Container (Explicit Height) */}
+        <div className="relative w-full h-[34px] flex items-end">
+          {/* Unplayed Track (Gray) */}
+          <div className="absolute bottom-[2px] left-0 right-0 h-[4px] bg-white/20 rounded-full" />
+          
+          {/* Played Track Container (Clipped to Progress Percentage) */}
+          <div 
+            className="absolute bottom-[2px] left-0 flex items-end overflow-hidden h-[30px] rounded-l-full"
+            style={{ width: `${song.progress}%` }}
           >
-            <defs>
-              {/* Dynamic foreground wave gradient based on album art colors */}
-              <linearGradient id="waveGradientFront" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor={song.colors.secondary} />
-                <stop offset="50%" stopColor={song.colors.accent} />
-                <stop offset="100%" stopColor={song.colors.primary} />
-              </linearGradient>
+            {/* Animated SVG Waveform (No horizontal panning to prevent jumping) */}
+            <svg 
+              className="absolute left-0 bottom-0 h-[30px] w-full"
+              viewBox="0 0 100 30"
+              preserveAspectRatio="none"
+            >
+              <defs>
+                {/* Dynamic foreground wave gradient based on album art colors */}
+                <linearGradient id="waveGradientFront" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor={song.colors.secondary} />
+                  <stop offset="50%" stopColor={song.colors.accent} />
+                  <stop offset="100%" stopColor={song.colors.primary} />
+                </linearGradient>
+                
+                {/* Dynamic background wave gradient */}
+                <linearGradient id="waveGradientBack" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor={song.colors.secondary} stopOpacity="0.4" />
+                  <stop offset="50%" stopColor={song.colors.primary} stopOpacity="0.6" />
+                  <stop offset="100%" stopColor={song.colors.secondary} stopOpacity="0.4" />
+                </linearGradient>
+              </defs>
+
+              {/* Back layered wave (translucent) */}
+              <motion.path 
+                d="M 0 30 C 10 30, 20 8, 50 15 C 80 22, 90 8, 100 12 L 100 30 L 0 30 Z" 
+                fill="url(#waveGradientBack)"
+                animate={isPlaying ? { scaleY: [1, 1.25, 1], opacity: [0.7, 1, 0.7] } : { scaleY: 1, opacity: 0.7 }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                style={{ originY: 1 }}
+              />
+
+              {/* Front layered wave (solid gradient) */}
+              <motion.path 
+                d="M 0 30 C 15 30, 25 15, 50 18 C 75 21, 85 12, 100 16 L 100 30 L 0 30 Z" 
+                fill="url(#waveGradientFront)" 
+                animate={isPlaying ? { scaleY: [1, 1.15, 1] } : { scaleY: 1 }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
+                style={{ originY: 1 }}
+              />
               
-              {/* Dynamic background wave gradient */}
-              <linearGradient id="waveGradientBack" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor={song.colors.secondary} stopOpacity="0.4" />
-                <stop offset="50%" stopColor={song.colors.primary} stopOpacity="0.6" />
-                <stop offset="100%" stopColor={song.colors.secondary} stopOpacity="0.4" />
-              </linearGradient>
-            </defs>
+              {/* Thick Base Line */}
+              <rect x="0" y="26" width="100" height="4" fill="url(#waveGradientFront)" rx="2" />
+            </svg>
+          </div>
 
-            {/* Back layered wave (translucent) */}
-            <motion.path 
-              d="M 0 30 C 10 30, 20 8, 50 15 C 80 22, 90 8, 100 12 L 100 30 L 0 30 Z" 
-              fill="url(#waveGradientBack)"
-              animate={isPlaying ? { scaleY: [1, 1.25, 1], opacity: [0.7, 1, 0.7] } : { scaleY: 1, opacity: 0.7 }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              style={{ originY: 1 }}
-            />
-
-            {/* Front layered wave (solid gradient) */}
-            <motion.path 
-              d="M 0 30 C 15 30, 25 15, 50 18 C 75 21, 85 12, 100 16 L 100 30 L 0 30 Z" 
-              fill="url(#waveGradientFront)" 
-              animate={isPlaying ? { scaleY: [1, 1.15, 1] } : { scaleY: 1 }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
-              style={{ originY: 1 }}
-            />
-            
-            {/* Thick Base Line */}
-            <rect x="0" y="26" width="100" height="4" fill="url(#waveGradientFront)" rx="2" />
-          </svg>
+          {/* Scrubber Knob with Glowing Aura */}
+          <div 
+            className="absolute bottom-[2px] w-[18px] h-[18px] rounded-full border-[3.5px] border-white transform -translate-x-1/2 translate-y-1/2 cursor-pointer hover:scale-125 transition-transform"
+            style={{ 
+              left: `${song.progress}%`,
+              backgroundColor: song.colors.primary,
+              boxShadow: `0 0 14px 2px ${song.colors.primary}80`
+            }}
+          />
         </div>
-
-        {/* Scrubber Knob with Glowing Aura */}
-        <div 
-          className="absolute bottom-[2px] w-[18px] h-[18px] rounded-full border-[3.5px] border-white transform -translate-x-1/2 translate-y-1/2 cursor-pointer hover:scale-125 transition-transform"
-          style={{ 
-            left: `${song.progress}%`,
-            backgroundColor: song.colors.primary,
-            boxShadow: `0 0 14px 2px ${song.colors.primary}80` // 80 is hex for 50% opacity
-          }}
-        />
         
         {/* Timestamps */}
-        <div className="flex justify-between text-[11.5px] text-white/70 mt-4 font-medium px-1">
+        <div className="flex justify-between text-[11.5px] text-white/70 mt-1 font-medium px-1">
           <span>{song.currentTime}</span>
           <span>{song.totalTime}</span>
         </div>
