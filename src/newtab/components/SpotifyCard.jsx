@@ -29,9 +29,24 @@ export default function SpotifyCard() {
 
       {/* Track Info (Centered) */}
       <div className="relative z-10 flex justify-center items-center gap-2 mt-4">
-        {/* Tiny record/disc icon */}
-        <div className="w-[14px] h-[14px] rounded-full border-[2px] border-white flex items-center justify-center">
-           <div className="w-[3px] h-[3px] bg-white rounded-full" />
+        {/* Animated Equalizer */}
+        <div className="flex items-end gap-[2px] h-[14px]">
+          <div 
+            className={`w-[2.5px] rounded-t-sm transition-all duration-300 ${isPlaying ? 'animate-eq' : 'h-[4px]'}`} 
+            style={{ backgroundColor: song.color, animationDelay: '0s' }} 
+          />
+          <div 
+            className={`w-[2.5px] rounded-t-sm transition-all duration-300 ${isPlaying ? 'animate-eq' : 'h-[4px]'}`} 
+            style={{ backgroundColor: song.color, animationDelay: '0.15s' }} 
+          />
+          <div 
+            className={`w-[2.5px] rounded-t-sm transition-all duration-300 ${isPlaying ? 'animate-eq' : 'h-[4px]'}`} 
+            style={{ backgroundColor: song.color, animationDelay: '0.3s' }} 
+          />
+          <div 
+            className={`w-[2.5px] rounded-t-sm transition-all duration-300 ${isPlaying ? 'animate-eq' : 'h-[4px]'}`} 
+            style={{ backgroundColor: song.color, animationDelay: '0.1s' }} 
+          />
         </div>
         <h3 className="font-bold text-[15px] truncate tracking-tight">
           {song.title} <span className="font-normal text-white/70">• {song.artist}</span>

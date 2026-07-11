@@ -57,6 +57,16 @@ body {
   animation: splash linear infinite;
 }
 
+@keyframes eq {
+  0%, 100% { height: 4px; }
+  25% { height: 12px; }
+  50% { height: 6px; }
+  75% { height: 14px; }
+}
+.animate-eq {
+  animation: eq 0.8s infinite ease-in-out;
+}
+
 @keyframes snow {
   0% { transform: translate(0, -20px) rotate(0deg); opacity: 0; }
   10% { opacity: 1; }
