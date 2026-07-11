@@ -11,7 +11,6 @@ export default function WeatherCard({ timeOfDay = 'evening' }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [forceCondition, setForceCondition] = useState(null); // TEMPORARY DEBUG
   
   const [isEditingCity, setIsEditingCity] = useState(false);
   const [tempCity, setTempCity] = useState(city);
@@ -61,24 +60,7 @@ export default function WeatherCard({ timeOfDay = 'evening' }) {
       className={`relative overflow-hidden ${bgClass} text-white cursor-pointer transition-all duration-300`}
       onClick={() => setIsExpanded(!isExpanded)}
     >
-      {/* TEMPORARY DEBUG BUTTONS */}
-      <div className="absolute top-2 right-2 z-50 flex gap-1 bg-black/50 p-1 rounded-md backdrop-blur-md">
-        {['Clear', 'Clouds', 'Rain', 'Snow', 'Thunderstorm', 'Reset'].map(c => (
-          <button 
-            key={c} 
-            onClick={(e) => { 
-              e.stopPropagation(); 
-              if(c === 'Reset') setForceCondition(null);
-              else setForceCondition(c); 
-            }} 
-            className={`text-[9px] px-1.5 py-0.5 rounded ${forceCondition === c ? 'bg-blue-500' : 'bg-white/20 hover:bg-white/40'} text-white font-bold uppercase`}
-          >
-            {c}
-          </button>
-        ))}
-      </div>
-
-      <WeatherEffects condition={forceCondition || data?.condition} />
+      <WeatherEffects condition={data?.condition} />
       
       <div className="relative z-10 w-full flex flex-col gap-4 mt-4">
         {loading ? (
