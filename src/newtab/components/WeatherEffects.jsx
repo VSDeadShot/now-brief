@@ -78,24 +78,21 @@ export default function WeatherEffects({ condition }) {
   if (condition === 'Rain' || condition === 'Drizzle') {
     return (
       <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden rounded-[24px] bg-slate-900/20">
-        {[...Array(40)].map((_, i) => (
-          <motion.div 
-            key={i}
-            initial={{ y: -50, x: Math.random() * 400 - 50, opacity: 0 }}
-            animate={{ y: 300, x: `calc(${Math.random() * 400 - 50}px - 60px)`, opacity: [0, 0.6, 0] }}
-            transition={{ 
-              duration: 0.5 + Math.random() * 0.3, 
-              repeat: Infinity, 
-              ease: "linear", 
-              delay: Math.random() * 2 
-            }}
-            className="absolute bg-white w-[2px] rounded-full blur-[0.5px]"
-            style={{
-              height: `${20 + Math.random() * 30}px`,
-              transform: 'rotate(15deg)'
-            }}
-          />
-        ))}
+        <div className="absolute inset-[-50%] w-[200%] h-[200%] rotate-[15deg]">
+          {[...Array(40)].map((_, i) => (
+            <div 
+              key={i}
+              className="absolute bg-white/60 animate-rain w-[1.5px] rounded-full"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `-50px`,
+                height: `${20 + Math.random() * 30}px`,
+                animationDelay: `${Math.random() * 1}s`,
+                animationDuration: `${0.4 + Math.random() * 0.3}s`
+              }}
+            />
+          ))}
+        </div>
       </div>
     );
   }
@@ -147,24 +144,21 @@ export default function WeatherEffects({ condition }) {
         />
         
         {/* Heavy Rain */}
-        {[...Array(50)].map((_, i) => (
-          <motion.div 
-            key={`rain-${i}`}
-            initial={{ y: -50, x: Math.random() * 400 - 50, opacity: 0 }}
-            animate={{ y: 300, x: `calc(${Math.random() * 400 - 50}px - 30px)`, opacity: [0, 0.7, 0] }}
-            transition={{ 
-              duration: 0.3 + Math.random() * 0.2, 
-              repeat: Infinity, 
-              ease: "linear", 
-              delay: Math.random() * 1 
-            }}
-            className="absolute bg-white/80 w-[2px] rounded-full"
-            style={{
-              height: `${30 + Math.random() * 40}px`,
-              transform: 'rotate(10deg)'
-            }}
-          />
-        ))}
+        <div className="absolute inset-[-50%] w-[200%] h-[200%] rotate-[15deg]">
+          {[...Array(60)].map((_, i) => (
+            <div 
+              key={`rain-${i}`}
+              className="absolute bg-white/80 animate-rain w-[2px] rounded-full"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `-50px`,
+                height: `${30 + Math.random() * 40}px`,
+                animationDelay: `${Math.random() * 0.8}s`,
+                animationDuration: `${0.3 + Math.random() * 0.2}s`
+              }}
+            />
+          ))}
+        </div>
       </div>
     );
   }
