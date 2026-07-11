@@ -37,40 +37,33 @@ export default function WeatherEffects({ condition }) {
   if (condition === 'Clouds') {
     return (
       <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden rounded-[24px]">
-        {/* Background Clouds */}
+        {/* Deep background cloud layer */}
         <motion.div
-          animate={{ x: [0, 100, 0] }}
-          transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-          className="absolute top-[10%] left-[-20%] w-[140%] h-32 bg-white/10 blur-2xl rounded-full"
+          animate={{ x: ['-10%', '0%', '-10%'] }}
+          transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+          className="absolute top-[-30px] left-[-20%] w-[150%] h-40 bg-white/20 blur-[50px] rounded-full"
         />
-        {/* Midground Fluffy Clouds */}
-        {[...Array(4)].map((_, i) => (
-          <motion.div
-            key={`mid-${i}`}
-            initial={{ x: Math.random() * 300 - 100, y: Math.random() * 50 - 20 }}
-            animate={{ x: [null, 400], opacity: [0, 0.4, 0] }}
-            transition={{ duration: 25 + Math.random() * 15, repeat: Infinity, ease: "linear", delay: Math.random() * 10 }}
-            className="absolute opacity-0"
-          >
-            <svg width="120" height="80" viewBox="0 0 24 24" className="text-white/30 drop-shadow-xl" fill="currentColor">
-              <path d="M17.5 19c2.485 0 4.5-2.015 4.5-4.5 0-2.313-1.745-4.225-4-4.474-.46-2.55-2.67-4.526-5.36-4.526-2.98 0-5.4 2.42-5.4 5.4 0 .332.03.655.087.97-.247-.11-.52-.17-.807-.17-1.105 0-2 .895-2 2s.895 2 2 2h11z"/>
-            </svg>
-          </motion.div>
-        ))}
-        {/* Foreground Fluffy Clouds */}
-        {[...Array(3)].map((_, i) => (
-          <motion.div
-            key={`fore-${i}`}
-            initial={{ x: Math.random() * 300 - 150, y: 30 + Math.random() * 40 }}
-            animate={{ x: [null, 400], opacity: [0, 0.6, 0] }}
-            transition={{ duration: 20 + Math.random() * 10, repeat: Infinity, ease: "linear", delay: Math.random() * 5 }}
-            className="absolute opacity-0"
-          >
-            <svg width="180" height="120" viewBox="0 0 24 24" className="text-white/40 drop-shadow-2xl" fill="currentColor">
-              <path d="M17.5 19c2.485 0 4.5-2.015 4.5-4.5 0-2.313-1.745-4.225-4-4.474-.46-2.55-2.67-4.526-5.36-4.526-2.98 0-5.4 2.42-5.4 5.4 0 .332.03.655.087.97-.247-.11-.52-.17-.807-.17-1.105 0-2 .895-2 2s.895 2 2 2h11z"/>
-            </svg>
-          </motion.div>
-        ))}
+        
+        {/* Midground cloud layer 1 */}
+        <motion.div
+          animate={{ x: ['0%', '-20%', '0%'] }}
+          transition={{ duration: 45, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-[10px] left-[10%] w-[120%] h-48 bg-white/30 blur-[40px] rounded-full"
+        />
+
+        {/* Midground cloud layer 2 */}
+        <motion.div
+          animate={{ x: ['-15%', '15%', '-15%'] }}
+          transition={{ duration: 55, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-[50px] left-[-10%] w-[130%] h-40 bg-white/20 blur-[35px] rounded-full"
+        />
+        
+        {/* Foreground dense cloud chunks */}
+        <motion.div
+          animate={{ x: ['-30%', '5%', '-30%'] }}
+          transition={{ duration: 35, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute bottom-[-40px] left-[-40%] w-[180%] h-56 bg-white/40 blur-[30px] rounded-t-[100px]"
+        />
       </div>
     );
   }
