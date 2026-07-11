@@ -175,9 +175,9 @@ export default function WeatherEffects({ condition }) {
         <motion.div 
           animate={{ opacity: [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0] }}
           transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
-          className="absolute top-[-20px] right-[20%] w-32 h-32 text-yellow-300 drop-shadow-[0_0_15px_rgba(253,224,71,0.8)]"
+          className="absolute top-[10px] right-[25%] w-12 h-12 text-yellow-300 drop-shadow-[0_0_15px_rgba(253,224,71,1)]"
         >
-          <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full opacity-80 transform -rotate-12">
+          <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full opacity-90 transform -rotate-12">
             <path d="M11 21.999c-.198 0-.392-.058-.555-.166-.312-.208-.475-.572-.412-.942l1.528-8.891H6.5c-.389 0-.74-.225-.905-.577-.165-.353-.105-.773.155-1.066l9-10c.264-.294.685-.369 1.037-.184.352.184.551.554.49 9.42l-1.528 8.891h5.062c.389 0 .74.225.905.577.165.353.105.773-.155 1.066l-9 10c-.173.192-.416.299-.667.299z" />
           </svg>
         </motion.div>
