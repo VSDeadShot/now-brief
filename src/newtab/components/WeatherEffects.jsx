@@ -4,19 +4,44 @@ import { motion } from 'framer-motion';
 export default function WeatherEffects({ condition, isNight }) {
   if (!condition) return null;
 
+  // Calculate moon phase (0-7)
+  const getMoonPhaseIndex = () => {
+    const LUNAR_MONTH = 29.53058867;
+    const knownNewMoon = new Date('2000-01-06T18:14:00Z').getTime();
+    const daysSince = (Date.now() - knownNewMoon) / (1000 * 60 * 60 * 24);
+    const phase = (daysSince % LUNAR_MONTH) / LUNAR_MONTH;
+    return Math.floor(phase * 8 + 0.5) % 8;
+  };
+
   if (condition === 'Clear') {
     if (isNight) {
+      const phaseIndex = getMoonPhaseIndex();
+      let moonStyle = {};
+      
+      // 0:New, 1:WaxingCrescent, 2:FirstQuarter, 3:WaxingGibbous, 4:Full, 5:WaningGibbous, 6:LastQuarter, 7:WaningCrescent
+      switch (phaseIndex) {
+        case 0: moonStyle = { border: '2px solid rgba(255,255,255,0.05)' }; break;
+        case 1: moonStyle = { boxShadow: 'inset -16px 0px 0 0 rgba(226,232,240,0.9)' }; break;
+        case 2: moonStyle = { boxShadow: 'inset -48px 0px 0 0 rgba(226,232,240,0.9)' }; break;
+        case 3: moonStyle = { backgroundColor: 'rgba(226,232,240,0.9)', boxShadow: 'inset 24px 0px 0 0 rgba(0,0,0,0.6)' }; break;
+        case 4: moonStyle = { backgroundColor: 'rgba(226,232,240,0.9)', boxShadow: '0 0 20px rgba(226,232,240,0.4)' }; break;
+        case 5: moonStyle = { backgroundColor: 'rgba(226,232,240,0.9)', boxShadow: 'inset -24px 0px 0 0 rgba(0,0,0,0.6)' }; break;
+        case 6: moonStyle = { boxShadow: 'inset 48px 0px 0 0 rgba(226,232,240,0.9)' }; break;
+        case 7: moonStyle = { boxShadow: 'inset 16px 0px 0 0 rgba(226,232,240,0.9)' }; break;
+        default: moonStyle = { boxShadow: 'inset -16px 0px 0 0 rgba(226,232,240,0.9)' }; break;
+      }
+
       return (
         <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden rounded-[24px]">
           {/* Twinkling Stars */}
-          {[...Array(15)].map((_, i) => (
+          {[...Array(20)].map((_, i) => (
             <motion.div
               key={i}
-              animate={{ opacity: [0.2, 0.8, 0.2], scale: [0.8, 1.2, 0.8] }}
+              animate={{ opacity: [0.1, 0.9, 0.1], scale: [0.8, 1.2, 0.8] }}
               transition={{ duration: 3 + Math.random() * 4, repeat: Infinity, delay: Math.random() * 5 }}
-              className="absolute bg-white rounded-full shadow-[0_0_8px_rgba(255,255,255,0.8)]"
+              className="absolute bg-white rounded-full shadow-[0_0_8px_rgba(255,255,255,1)]"
               style={{
-                top: `${Math.random() * 60}%`,
+                top: `${Math.random() * 70}%`,
                 left: `${Math.random() * 100}%`,
                 width: `${1 + Math.random() * 2}px`,
                 height: `${1 + Math.random() * 2}px`
@@ -26,12 +51,15 @@ export default function WeatherEffects({ condition, isNight }) {
           
           {/* Moon Glow */}
           <motion.div 
-            animate={{ scale: [1, 1.05, 1], opacity: [0.5, 0.7, 0.5] }}
+            animate={{ scale: [1, 1.05, 1], opacity: [0.4, 0.6, 0.4] }}
             transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
             className="absolute top-[-30px] right-[-30px] w-56 h-56 bg-slate-300/10 blur-3xl rounded-full" 
           />
-          {/* Moon Core (Crescent) */}
-          <div className="absolute top-[-10px] right-[10px] w-24 h-24 rounded-full shadow-[-15px_15px_0_0_rgba(226,232,240,0.8)] opacity-90 blur-[1px]" />
+          {/* Dynamic Phase Moon */}
+          <div 
+            className="absolute top-[-10px] right-[10px] w-24 h-24 rounded-full opacity-90 blur-[0.5px] transition-all duration-1000" 
+            style={moonStyle}
+          />
         </div>
       );
     }
