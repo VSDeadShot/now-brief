@@ -59,8 +59,8 @@ export default function WeatherCard({ timeOfDay = 'evening' }) {
     <Card 
       className={`relative overflow-hidden ${bgClass} text-white cursor-pointer transition-all duration-300`}
       onClick={() => setIsExpanded(!isExpanded)}
-    >
-      <WeatherEffects condition={data?.condition} />
+      >
+      <WeatherEffects condition={data?.condition} isNight={data?.icon?.endsWith('n')} />
       
       <div className="relative z-10 w-full flex flex-col gap-4 mt-4">
         {loading ? (

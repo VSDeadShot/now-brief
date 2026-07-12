@@ -1,10 +1,41 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-export default function WeatherEffects({ condition }) {
+export default function WeatherEffects({ condition, isNight }) {
   if (!condition) return null;
 
   if (condition === 'Clear') {
+    if (isNight) {
+      return (
+        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden rounded-[24px]">
+          {/* Twinkling Stars */}
+          {[...Array(15)].map((_, i) => (
+            <motion.div
+              key={i}
+              animate={{ opacity: [0.2, 0.8, 0.2], scale: [0.8, 1.2, 0.8] }}
+              transition={{ duration: 3 + Math.random() * 4, repeat: Infinity, delay: Math.random() * 5 }}
+              className="absolute bg-white rounded-full shadow-[0_0_8px_rgba(255,255,255,0.8)]"
+              style={{
+                top: `${Math.random() * 60}%`,
+                left: `${Math.random() * 100}%`,
+                width: `${1 + Math.random() * 2}px`,
+                height: `${1 + Math.random() * 2}px`
+              }}
+            />
+          ))}
+          
+          {/* Moon Glow */}
+          <motion.div 
+            animate={{ scale: [1, 1.05, 1], opacity: [0.5, 0.7, 0.5] }}
+            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute top-[-30px] right-[-30px] w-56 h-56 bg-slate-300/10 blur-3xl rounded-full" 
+          />
+          {/* Moon Core (Crescent) */}
+          <div className="absolute top-[-10px] right-[10px] w-24 h-24 rounded-full shadow-[-15px_15px_0_0_rgba(226,232,240,0.8)] opacity-90 blur-[1px]" />
+        </div>
+      );
+    }
+
     return (
       <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden rounded-[24px]">
         {/* Sun Glow */}
