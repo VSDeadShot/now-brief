@@ -62,9 +62,8 @@ export default function SpotifyCard() {
       const code = url.searchParams.get('code');
       
       if (code) {
-        // Send code to local proxy to exchange for tokens
-        // (Assuming proxy runs on localhost:3000 during dev)
-        fetch('http://localhost:3000/api/spotify-token', {
+        // Send code to live Vercel proxy to exchange for tokens
+        fetch('https://proxy-gamma-three-97.vercel.app/api/spotify-token', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ code, redirectUri })
@@ -173,7 +172,7 @@ export default function SpotifyCard() {
         console.warn("Spotify token expired, refreshing silently...");
         chrome.storage.local.get(['spotify_refresh_token'], (result) => {
           if (result.spotify_refresh_token) {
-            fetch('http://localhost:3000/api/spotify-refresh', {
+            fetch('https://proxy-gamma-three-97.vercel.app/api/spotify-refresh', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ refresh_token: result.spotify_refresh_token })

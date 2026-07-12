@@ -4,8 +4,8 @@ import Card from './Card';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { getCache, setCache } from '../../lib/cache';
 
-// Using local dev server for now until we deploy the proxy
-const PROXY_URL = 'http://localhost:3000';
+// Proxy URL points to Vercel deployment
+const PROXY_URL = 'https://proxy-gamma-three-97.vercel.app';
 
 async function fetchYoutubeVideos() {
   try {
