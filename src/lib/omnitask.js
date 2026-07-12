@@ -11,16 +11,15 @@ export async function fetchOmniTasks() {
     // Filter for pending tasks
     const pendingTasks = allTasks.filter(t => t.status !== 'completed');
     
-    // Let's filter for those due today or earlier, or without a due date
-    const todayStr = new Date().toISOString().split('T')[0];
-    const dueToday = pendingTasks.filter(t => {
-      if (!t.dueDate) return true; // Show tasks with no specific due date
-      const taskDate = t.dueDate.split('T')[0];
-      return taskDate <= todayStr;
+    // Let's sort the pending tasks by due date (tasks without a due date go to the bottom)
+    const sortedTasks = pendingTasks.sort((a, b) => {
+      if (!a.dueDate) return 1;
+      if (!b.dueDate) return -1;
+      return new Date(a.dueDate) - new Date(b.dueDate);
     });
 
     return {
-      tasks: dueToday
+      tasks: sortedTasks
     };
   } catch (error) {
     console.error("OmniTask fetch error (is it running?):", error);
