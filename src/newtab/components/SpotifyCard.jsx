@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Card from './Card';
 import { motion } from 'framer-motion';
 import { Play, Pause, SkipBack, SkipForward, ThumbsUp, Shuffle, Cast, AudioLines } from 'lucide-react';
+import { getAlbumColors } from '../../lib/colors';
 
 export default function SpotifyCard() {
   const [hasToken, setHasToken] = useState(false);
@@ -37,7 +38,8 @@ export default function SpotifyCard() {
     }
 
     const redirectUri = chrome.identity.getRedirectURL(); 
-    const scope = 'user-read-currently-playing';
+    // Added user-modify-playback-state to allow controlling music
+    const scope = 'user-read-currently-playing user-modify-playback-state';
     
     const authUrl = new URL('https://accounts.spotify.com/authorize');
     authUrl.searchParams.append('client_id', clientId);
@@ -92,7 +94,71 @@ export default function SpotifyCard() {
     });
   };
 
+  const handleLogout = () => {
+    chrome.storage.local.remove(['spotify_access_token', 'spotify_refresh_token'], () => {
+      setHasToken(false);
+      setSong(null);
+    });
+  };
+
   const [song, setSong] = useState(null);
+  const [albumColors, setAlbumColors] = useState({
+    primary: "#f48c06",
+    secondary: "#dc2f02",
+    accent: "#ffba08"
+  });
+  const [localProgressMs, setLocalProgressMs] = useState(0);
+
+  // Sync local progress when the API updates it
+  React.useEffect(() => {
+    if (song && song.progress_ms !== undefined) {
+      setLocalProgressMs(song.progress_ms);
+    }
+  }, [song?.progress_ms]);
+
+  // Buttery smooth 60fps local progress ticker
+  React.useEffect(() => {
+    if (!song || !isPlaying) return;
+    
+    let lastTime = performance.now();
+    let frameId;
+
+    const tick = (currentTime) => {
+      const delta = currentTime - lastTime;
+      lastTime = currentTime;
+      
+      setLocalProgressMs(prev => {
+        const next = prev + delta;
+        return next > song.duration_ms ? song.duration_ms : next;
+      });
+      frameId = requestAnimationFrame(tick);
+    };
+    
+    frameId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frameId);
+  }, [song?.duration_ms, isPlaying]);
+
+  const formatTime = (ms) => {
+    if (!ms || isNaN(ms)) return "00:00";
+    const totalSeconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  };
+
+  // Dynamically extract colors whenever the album artwork changes
+  React.useEffect(() => {
+    if (song && song.albumArt) {
+      getAlbumColors(song.albumArt)
+        .then((colors) => {
+          setAlbumColors(colors);
+        })
+        .catch(err => {
+          console.warn("Could not extract album colors (using default orange fallback):", err);
+          setAlbumColors({ primary: '#f48c06', secondary: '#dc2f02', accent: '#ffba08' });
+        });
+    }
+  }, [song?.albumArt]);
 
   const fetchCurrentlyPlaying = (token) => {
     fetch('https://api.spotify.com/v1/me/player/currently-playing', {
@@ -139,29 +205,14 @@ export default function SpotifyCard() {
 
       const data = await res.json();
       if (data && data.item) {
-        const formatTime = (ms) => {
-          const totalSeconds = Math.floor(ms / 1000);
-          const minutes = Math.floor(totalSeconds / 60);
-          const seconds = totalSeconds % 60;
-          return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        };
-
-        const progressPercent = (data.progress_ms / data.item.duration_ms) * 100;
-        
         setSong({
           title: data.item.name,
           artist: data.item.artists.map(a => a.name).join(', '),
-          progress: progressPercent,
-          currentTime: formatTime(data.progress_ms),
+          progress_ms: data.progress_ms,
           totalTime: formatTime(data.item.duration_ms),
+          duration_ms: data.item.duration_ms, // Store raw MS for seeking
           isPlaying: data.is_playing,
-          albumArt: data.item.album.images[0]?.url,
-          // Using fallback colors for the waveform until we implement dynamic color extraction
-          colors: {
-            primary: "#f48c06",
-            secondary: "#dc2f02",
-            accent: "#ffba08"
-          }
+          albumArt: data.item.album.images[0]?.url
         });
         setIsPlaying(data.is_playing);
       }
@@ -185,6 +236,56 @@ export default function SpotifyCard() {
     const interval = setInterval(pullData, 3000);
     return () => clearInterval(interval);
   }, [hasToken]);
+
+  // Playback Control Functions
+  const sendPlaybackCommand = (endpoint, method = 'POST', queryParams = '') => {
+    chrome.storage.local.get(['spotify_access_token'], (result) => {
+      if (result.spotify_access_token) {
+        fetch(`https://api.spotify.com/v1/me/player/${endpoint}${queryParams}`, {
+          method: method,
+          headers: { 'Authorization': `Bearer ${result.spotify_access_token}` }
+        }).catch(err => console.error(`Failed to execute ${endpoint}:`, err));
+      }
+    });
+  };
+
+  const togglePlayPause = (e) => {
+    e.stopPropagation();
+    const newIsPlaying = !isPlaying;
+    setIsPlaying(newIsPlaying);
+    // Optimistic UI update
+    if (song) setSong({ ...song, isPlaying: newIsPlaying });
+    sendPlaybackCommand(newIsPlaying ? 'play' : 'pause', 'PUT');
+  };
+
+  const handleNext = (e) => {
+    e.stopPropagation();
+    sendPlaybackCommand('next');
+  };
+
+  const handlePrev = (e) => {
+    e.stopPropagation();
+    sendPlaybackCommand('previous');
+  };
+
+  const handleSeek = (e) => {
+    e.stopPropagation();
+    if (!song || !song.duration_ms) return;
+    
+    // Calculate click position percentage relative to the track bounds
+    const rect = e.currentTarget.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    let percent = clickX / rect.width;
+    if (percent < 0) percent = 0;
+    if (percent > 1) percent = 1;
+    
+    const targetMs = Math.floor(percent * song.duration_ms);
+    
+    // Optimistic UI update
+    setLocalProgressMs(targetMs);
+    
+    sendPlaybackCommand('seek', 'PUT', `?position_ms=${targetMs}`);
+  };
 
   // 1. If not connected, show the connect screen
   if (!hasToken) {
@@ -238,6 +339,8 @@ export default function SpotifyCard() {
     );
   }
 
+  const currentProgressPercent = song ? (localProgressMs / song.duration_ms) * 100 : 0;
+
   // 3. If connected and playing, show the real UI
   return (
     <Card className="relative overflow-hidden p-5 pb-6 group text-white min-h-[180px] flex flex-col justify-between rounded-[28px]">
@@ -253,7 +356,7 @@ export default function SpotifyCard() {
 
       {/* Top Header */}
       <div className="relative z-10 flex justify-between items-center text-[13px] font-semibold opacity-90 px-1">
-        <span>This phone</span>
+        <span className="cursor-pointer hover:underline" onClick={handleLogout} title="Click to disconnect and re-authenticate">This phone</span>
         <button className="text-white hover:text-white/80 transition-colors">
           <Cast size={18} strokeWidth={2} />
         </button>
@@ -288,15 +391,18 @@ export default function SpotifyCard() {
       {/* Samsung Style Gradient Waveform Progress Bar */}
       <div className="relative z-10 w-full mt-2">
         
-        {/* Track Area Container (Explicit Height) */}
-        <div className="relative w-full h-[34px] flex items-end">
+        {/* Track Area Container (Explicit Height, Clickable for Seeking) */}
+        <div 
+          className="relative w-full h-[34px] flex items-end cursor-pointer group/track" 
+          onClick={handleSeek}
+        >
           {/* Unplayed Track (Gray) */}
-          <div className="absolute bottom-[2px] left-0 right-0 h-[4px] bg-white/20 rounded-full" />
+          <div className="absolute bottom-[2px] left-0 right-0 h-[4px] bg-white/20 rounded-full group-hover/track:h-[6px] transition-all" />
           
           {/* Played Track Container (Clipped to Progress Percentage) */}
           <div 
             className="absolute bottom-[2px] left-0 flex items-end overflow-hidden h-[30px]"
-            style={{ width: `${song.progress}%` }}
+            style={{ width: `${currentProgressPercent}%` }}
           >
             {/* Animated SVG Waveform */}
             <svg 
@@ -306,15 +412,15 @@ export default function SpotifyCard() {
             >
               <defs>
                 <linearGradient id="waveGradientFront" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor={song.colors.secondary} />
-                  <stop offset="50%" stopColor={song.colors.accent} />
-                  <stop offset="100%" stopColor={song.colors.primary} />
+                  <stop offset="0%" stopColor={albumColors.secondary} />
+                  <stop offset="50%" stopColor={albumColors.accent} />
+                  <stop offset="100%" stopColor={albumColors.primary} />
                 </linearGradient>
                 
                 <linearGradient id="waveGradientBack" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor={song.colors.secondary} stopOpacity="0.4" />
-                  <stop offset="50%" stopColor={song.colors.primary} stopOpacity="0.6" />
-                  <stop offset="100%" stopColor={song.colors.secondary} stopOpacity="0.4" />
+                  <stop offset="0%" stopColor={albumColors.secondary} stopOpacity="0.4" />
+                  <stop offset="50%" stopColor={albumColors.primary} stopOpacity="0.6" />
+                  <stop offset="100%" stopColor={albumColors.secondary} stopOpacity="0.4" />
                 </linearGradient>
               </defs>
 
@@ -337,25 +443,25 @@ export default function SpotifyCard() {
 
             {/* Perfect HTML Base Line to prevent SVG radius stretching */}
             <div 
-              className="absolute bottom-0 left-0 w-full h-[4px] rounded-full"
-              style={{ background: `linear-gradient(to right, ${song.colors.secondary}, ${song.colors.accent}, ${song.colors.primary})` }}
+              className="absolute bottom-0 left-0 w-full h-[4px] rounded-full group-hover/track:h-[6px] transition-all"
+              style={{ background: `linear-gradient(to right, ${albumColors.secondary}, ${albumColors.accent}, ${albumColors.primary})` }}
             />
           </div>
 
           {/* Scrubber Knob with Glowing Aura */}
           <div 
-            className="absolute bottom-[2px] w-[18px] h-[18px] rounded-full border-[3.5px] border-white transform -translate-x-1/2 translate-y-1/2 cursor-pointer hover:scale-125 transition-transform"
+            className="absolute bottom-[2px] w-[18px] h-[18px] rounded-full border-[3.5px] border-white transform -translate-x-1/2 translate-y-1/2 group-hover/track:scale-125 transition-transform"
             style={{ 
-              left: `${song.progress}%`,
-              backgroundColor: song.colors.primary,
-              boxShadow: `0 0 14px 2px ${song.colors.primary}80`
+              left: `${currentProgressPercent}%`,
+              backgroundColor: albumColors.primary,
+              boxShadow: `0 0 14px 2px ${albumColors.primary}80`
             }}
           />
         </div>
         
         {/* Timestamps */}
         <div className="flex justify-between text-[11.5px] text-white/70 mt-1 font-medium px-1">
-          <span>{song.currentTime}</span>
+          <span>{formatTime(localProgressMs)}</span>
           <span>{song.totalTime}</span>
         </div>
       </div>
@@ -365,11 +471,11 @@ export default function SpotifyCard() {
         <button className="text-white hover:text-white/80 transition-colors">
           <ThumbsUp size={20} strokeWidth={2} />
         </button>
-        <button className="text-white hover:text-white/80 transition-colors">
+        <button className="text-white hover:text-white/80 transition-colors" onClick={handlePrev}>
           <SkipBack size={24} className="fill-current" strokeWidth={1} />
         </button>
         <button 
-          onClick={(e) => { e.stopPropagation(); setIsPlaying(!isPlaying); }}
+          onClick={togglePlayPause}
           className="text-white hover:scale-110 transition-transform active:scale-95"
         >
           {isPlaying ? (
@@ -378,7 +484,7 @@ export default function SpotifyCard() {
             <Play size={32} className="fill-current" strokeWidth={1} />
           )}
         </button>
-        <button className="text-white hover:text-white/80 transition-colors">
+        <button className="text-white hover:text-white/80 transition-colors" onClick={handleNext}>
           <SkipForward size={24} className="fill-current" strokeWidth={1} />
         </button>
         <button className="text-white hover:text-white/80 transition-colors">
