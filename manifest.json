@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "description": "Personal daily dashboard overriding the new tab page.",
   "icons": {
-    "128": "icon.jpg"
+    "128": "icon.png"
   },
   "chrome_url_overrides": {
     "newtab": "index.html"
