@@ -7,64 +7,46 @@ A sleek, highly personalized daily dashboard browser extension that overrides yo
 Now Brief aggregates everything you need into a single, instantly loading feed, organized into a perfectly balanced **2-column desktop layout**:
 
 - **Dynamic Time-of-Day Theming**: The UI automatically shifts its mood based on the hour.
-  - 🌅 **Morning**: Bright whites, light sky-blue Aurora Mesh gradients, and blue accents.
-  - 🏙️ **Afternoon**: Deep forest greens and pure dark modes.
-  - 🌙 **Evening**: Midnight teals and ultra-dark OLED blacks.
-- **Aurora Mesh Backgrounds**: Independent, slowly floating blobs of color in the background simulate an organic, fluid ambiance.
-- **Conversational Headers**: Each section greets you with personalized, human-readable context rather than clinical labels.
+- **Bespoke Animations**: Buttery smooth 60fps micro-animations powered by Framer Motion.
 
 ### Widgets
 
-- **Weather**: Real-time weather data for your area, fetched securely via a backend proxy.
-- **OmniTask Targets**: Syncs locally with your OmniTask desktop app to show pending tasks due today, complete with priority indicators and project badges. *(Note: OmniTask is a custom desktop productivity app built by me. You can find it on my GitHub profile [@VSDeadShot](https://github.com/VSDeadShot))*
-- **DSA Tracker**: Pulls your daily due algorithm reviews directly from your live DSA Tracker app. *(Note: DSA Tracker is another custom tool I built to manage spaced repetition for algorithms. Check it out on my GitHub profile [@VSDeadShot](https://github.com/VSDeadShot))*
+- **Weather**: Real-time weather data with incredibly immersive 60fps CSS animations (thunderstorms with lightning, rain, snow, drifting clouds, and an astronomical lunar phase calculator that renders the exact moon phase dynamically at night).
+- **Spotify Integration**: Full OAuth 2.0 integration allowing you to see what's currently playing, play/pause, skip, shuffle, and "like" songs directly from the dashboard. It features a custom HTML5 Canvas color extractor that pulls dominant colors from the live album art and injects them into the UI in real-time, alongside a 60fps interpolated playback progress bar.
+- **YouTube Subscriptions**: Instantly fetch and watch the latest videos from your favorite creators (MKBHD, Mrwhosetheboss, Dave2D).
 - **Developer Activity**: Tracks your daily GitHub commit streak and today's contribution count. (Click the card to instantly open your GitHub profile).
+- **OmniTask Targets**: Syncs locally with your OmniTask desktop app to show pending tasks due today, complete with priority indicators and project badges.
+- **DSA Tracker**: Pulls your daily due algorithm reviews directly from your live DSA Tracker app.
 - **Curated News**: Fetches and parses RSS feeds for Samsung News (SamMobile) and General Tech News (The Verge), providing clean, truncated excerpts.
 
 ## 🏗️ Architecture & Stack
 
 - **Frontend Core**: React, Vite, and CRXJS (Manifest V3).
-- **Styling & Animation**: Tailwind CSS and Framer Motion for smooth, spring-based micro-animations and custom CSS keyframes for Aurora Mesh gradients.
+- **Styling & Animation**: Tailwind CSS and Framer Motion.
 - **Caching Engine**: Utilizes `chrome.storage.local` to render cached data *instantly* on tab open, completely eliminating layout shift.
-- **Background Worker**: A background service worker uses `chrome.alarms` to silently wake up every 15 minutes, fetch all APIs in parallel, and update the cache so it's never stale.
-- **Proxy Server**: A custom Node.js Express backend proxy (`/proxy`) handles the heavy lifting for Weather, DSA, and News fetching, keeping sensitive API keys completely out of the client bundle and bypassing browser CORS.
+- **Serverless Proxy Backend**: Hosted entirely on **Vercel** serverless functions (`api/`), completely bypassing browser CORS and securely storing all sensitive API keys (Spotify Client Secret, OpenWeatherMap, YouTube API). There is no local backend to run!
 
 ## 🚀 Installation & Setup
 
 ### 1. Install Dependencies
 ```bash
 npm install
-cd proxy
-npm install
-cd ..
 ```
 
-### 2. Environment Variables
-Create a `.env` file inside the `/proxy` directory and add your secret keys:
-```env
-OPENWEATHER_API_KEY=your_openweathermap_key
-NOW_BRIEF_SECRET=your_dsa_tracker_secret
-```
-
-### 3. Run the Proxy Server
-The local proxy must be running to fetch Weather, DSA, and News data:
-```bash
-cd proxy
-node server.js
-# Runs on http://localhost:3000
-```
-
-### 4. Build the Extension
+### 2. Build the Extension
 ```bash
 npm run build
 ```
 The build process will output an unpacked extension to the `dist` folder. 
 
-### 5. Install in Chrome
+### 3. Install in Chrome
 1. Go to `chrome://extensions` in your browser.
 2. Enable **Developer Mode** (top right corner).
 3. Click **Load unpacked** (top left corner).
 4. Select the `dist` folder located inside the `Now Brief` project directory.
 5. Open a New Tab to see your personalized dashboard!
+
+### 4. Spotify Authentication
+Click the "Connect Spotify" button on the Spotify card. This will securely open a popup to authenticate with your Spotify account via our Vercel OAuth proxy, automatically saving the refresh tokens in the background.
 
 *(Note: To see your OmniTask data, ensure your OmniTask Electron desktop app is running in the background so its local API is active on port 3001).*
