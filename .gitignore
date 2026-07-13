@@ -28,3 +28,4 @@ CLAUDE_SUMMARY.md
 proxy/.env
 .env
 .env.*
+!.env.example
