@@ -14,8 +14,8 @@ export default function NewTab() {
   const day = now.getDay(); // 0: Sun, 1: Mon, ..., 5: Fri, 6: Sat
   
   let timeOfDay = 'evening';
-  let possibleGreetings = [];
-  let subtitle = "Here's a recap of your day.";
+  let greeting = 'Evening brief';
+  let possibleSubtitles = [];
   let baseBgClass = "bg-[#050a0d] text-white";
   let blob1Class = "bg-[#0f2a33]";
   let blob2Class = "bg-[#111e24]";
@@ -23,42 +23,42 @@ export default function NewTab() {
 
   if (hour >= 5 && hour < 12) {
     timeOfDay = 'morning';
-    possibleGreetings = ["Good morning.", "Rise and shine.", "Ready to start the day?", "Hope you have a great day."];
-    subtitle = "Start your day with this briefing.";
+    greeting = 'Morning brief';
+    possibleSubtitles = ["Good morning.", "Rise and shine.", "Ready to start the day?", "Hope you have a great day."];
     baseBgClass = "bg-[#d5e8ff] text-[#1A1A1A]";
     blob1Class = "bg-[#e0f0ff]";
     blob2Class = "bg-[#cbe5ff]";
     highlightClass = "text-blue-500";
   } else if (hour >= 12 && hour < 17) {
     timeOfDay = 'afternoon';
-    possibleGreetings = ["Midday brief", "Enjoy the rest of your day.", "Good afternoon.", "Hope your day is going well."];
-    subtitle = "Hope your day is going as planned.";
+    greeting = 'Midday brief';
+    possibleSubtitles = ["Enjoy the rest of your day.", "Good afternoon.", "Hope your day is going well.", "Hope your day is going as planned."];
     baseBgClass = "bg-[#0a120c] text-white";
     blob1Class = "bg-[#163321]";
     blob2Class = "bg-[#112217]";
     highlightClass = "text-emerald-400";
   } else if (hour >= 17 && hour < 21) {
     timeOfDay = 'evening';
-    possibleGreetings = ["Evening brief", "Good evening.", "Time to wind down.", "Hope you had a great day."];
-    subtitle = "Here's a recap of your day.";
+    greeting = 'Evening brief';
+    possibleSubtitles = ["Good evening.", "Time to wind down.", "Hope you had a great day.", "Here's a recap of your day."];
   } else {
     // Night (9:00 PM to 4:59 AM)
     timeOfDay = 'evening'; // Keep evening visual theme
-    possibleGreetings = ["Time for bed.", "Sweet dreams.", "Rest well."];
-    subtitle = "Time to disconnect and recharge.";
+    greeting = 'Night brief';
+    possibleSubtitles = ["Time for bed.", "Sweet dreams.", "Rest well.", "Time to disconnect and recharge."];
   }
 
   // Contextual / Day-Specific overrides
   if (day === 1 && hour < 12) {
-    possibleGreetings.push("Start your week strong.");
+    possibleSubtitles.push("Start your week strong.");
   }
   if ((day === 5 && hour >= 17) || day === 6 || day === 0) {
-    possibleGreetings.push("Enjoy your weekend.");
+    possibleSubtitles.push("Enjoy your weekend.");
   }
 
   // Pick one randomly and memoize it so it doesn't flicker on re-renders
-  const greeting = useMemo(() => {
-    return possibleGreetings[Math.floor(Math.random() * possibleGreetings.length)];
+  const subtitle = useMemo(() => {
+    return possibleSubtitles[Math.floor(Math.random() * possibleSubtitles.length)];
   }, [hour]);
 
   return (
