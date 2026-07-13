@@ -103,7 +103,7 @@ export default function NewTab() {
               <p className="text-lg opacity-90">
                 Unwind with your <span className={highlightClass}>music</span>.
               </p>
-              <SpotifyCard />
+              <SpotifyCard timeOfDay={timeOfDay} />
             </div>
           </div>
           

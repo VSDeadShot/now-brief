@@ -4,7 +4,8 @@ import { motion } from 'framer-motion';
 import { Play, Pause, SkipBack, SkipForward, ThumbsUp, Shuffle, Cast, AudioLines } from 'lucide-react';
 import { getAlbumColors } from '../../lib/colors';
 
-export default function SpotifyCard() {
+export default function SpotifyCard({ timeOfDay = 'evening' }) {
+  const isLight = timeOfDay === 'morning';
   const [hasToken, setHasToken] = useState(false);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true);
@@ -289,17 +290,17 @@ export default function SpotifyCard() {
   // 1. If not connected, show the connect screen
   if (!hasToken) {
     return (
-      <Card className="relative overflow-hidden p-5 group text-white min-h-[180px] flex flex-col justify-center items-center rounded-[28px] border border-white/10 bg-[#1a1a1a]">
+      <Card className={`relative overflow-hidden p-5 group min-h-[180px] flex flex-col justify-center items-center rounded-[28px] border ${isLight ? 'bg-white text-black border-black/5' : 'bg-[#1a1a1a] text-white border-white/10'}`}>
         <div className="absolute inset-0 bg-gradient-to-br from-[#1DB954]/20 to-transparent z-0 opacity-50" />
         
         <div className="relative z-10 flex flex-col items-center gap-4 text-center">
           <div className="w-12 h-12 bg-[#1DB954] rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(29,185,84,0.5)]">
-             <AudioLines size={24} className="text-black" />
+             <AudioLines size={24} className={isLight ? "text-white" : "text-black"} />
           </div>
           
           <div>
             <h3 className="font-bold text-lg">Spotify Not Connected</h3>
-            <p className="text-xs text-white/60 mt-1 max-w-[200px]">
+            <p className={`text-xs mt-1 max-w-[200px] ${isLight ? 'text-black/60' : 'text-white/60'}`}>
               Connect your account to display your live currently playing tracks.
             </p>
           </div>
@@ -307,7 +308,7 @@ export default function SpotifyCard() {
           <button 
             onClick={handleConnect}
             disabled={isAuthenticating}
-            className="mt-2 bg-white text-black font-bold text-sm px-6 py-2 rounded-full hover:scale-105 transition-transform disabled:opacity-50 disabled:hover:scale-100"
+            className={`mt-2 font-bold text-sm px-6 py-2 rounded-full hover:scale-105 transition-transform disabled:opacity-50 disabled:hover:scale-100 ${isLight ? 'bg-black text-white' : 'bg-white text-black'}`}
           >
             {isAuthenticating ? 'Connecting...' : 'Connect Spotify'}
           </button>
@@ -319,17 +320,17 @@ export default function SpotifyCard() {
   // 2. If connected but nothing is playing
   if (hasToken && !song) {
     return (
-      <Card className="relative overflow-hidden p-5 group text-white min-h-[180px] flex flex-col justify-center items-center rounded-[28px] border border-white/10 bg-[#1a1a1a]">
+      <Card className={`relative overflow-hidden p-5 group min-h-[180px] flex flex-col justify-center items-center rounded-[28px] border ${isLight ? 'bg-white text-black border-black/5' : 'bg-[#1a1a1a] text-white border-white/10'}`}>
         <div className="absolute inset-0 bg-gradient-to-br from-[#1DB954]/10 to-transparent z-0 opacity-50" />
         
         <div className="relative z-10 flex flex-col items-center gap-3 text-center">
-          <div className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center">
-             <AudioLines size={24} className="text-white/40" />
+          <div className={`w-12 h-12 rounded-full flex items-center justify-center ${isLight ? 'bg-black/5' : 'bg-white/5'}`}>
+             <AudioLines size={24} className={isLight ? "text-black/40" : "text-white/40"} />
           </div>
           
           <div>
-            <h3 className="font-bold text-lg text-white/80">Nothing Playing</h3>
-            <p className="text-xs text-white/50 mt-1 max-w-[200px]">
+            <h3 className={`font-bold text-lg ${isLight ? 'text-black/80' : 'text-white/80'}`}>Nothing Playing</h3>
+            <p className={`text-xs mt-1 max-w-[200px] ${isLight ? 'text-black/50' : 'text-white/50'}`}>
               Open Spotify on any device to start listening.
             </p>
           </div>
@@ -342,7 +343,7 @@ export default function SpotifyCard() {
 
   // 3. If connected and playing, show the real UI
   return (
-    <Card className="relative overflow-hidden p-5 pb-6 group text-white min-h-[180px] flex flex-col justify-between rounded-[28px]">
+    <Card className={`relative overflow-hidden p-5 pb-6 group min-h-[180px] flex flex-col justify-between rounded-[28px] ${isLight ? 'text-black bg-white' : 'text-white'}`}>
       {/* Background is a highly blurred version of the live album art */}
       <div 
         className="absolute inset-0 z-0 opacity-50 bg-cover bg-center transition-all duration-1000"
@@ -351,12 +352,12 @@ export default function SpotifyCard() {
           filter: 'blur(30px) saturate(200%)' 
         }} 
       />
-      <div className="absolute inset-0 bg-black/30 z-0" />
+      <div className={`absolute inset-0 z-0 ${isLight ? 'bg-white/60' : 'bg-black/30'}`} />
 
       {/* Top Header */}
       <div className="relative z-10 flex justify-between items-center text-[13px] font-semibold opacity-90 px-1">
         <span className="cursor-pointer hover:underline" onClick={handleLogout} title="Click to disconnect and re-authenticate">This phone</span>
-        <button className="text-white hover:text-white/80 transition-colors">
+        <button className={`transition-colors ${isLight ? 'text-black hover:text-black/70' : 'text-white hover:text-white/80'}`}>
           <Cast size={18} strokeWidth={2} />
         </button>
       </div>
@@ -367,23 +368,23 @@ export default function SpotifyCard() {
         <div className="flex items-end gap-[2px] h-[14px]">
           <div 
             className={`w-[2.5px] rounded-t-sm transition-all duration-300 ${isPlaying ? 'animate-eq' : 'h-[4px]'}`} 
-            style={{ backgroundColor: song.color, animationDelay: '0s' }} 
+            style={{ backgroundColor: song.color || albumColors.primary, animationDelay: '0s' }} 
           />
           <div 
             className={`w-[2.5px] rounded-t-sm transition-all duration-300 ${isPlaying ? 'animate-eq' : 'h-[4px]'}`} 
-            style={{ backgroundColor: song.color, animationDelay: '0.15s' }} 
+            style={{ backgroundColor: song.color || albumColors.primary, animationDelay: '0.15s' }} 
           />
           <div 
             className={`w-[2.5px] rounded-t-sm transition-all duration-300 ${isPlaying ? 'animate-eq' : 'h-[4px]'}`} 
-            style={{ backgroundColor: song.color, animationDelay: '0.3s' }} 
+            style={{ backgroundColor: song.color || albumColors.primary, animationDelay: '0.3s' }} 
           />
           <div 
             className={`w-[2.5px] rounded-t-sm transition-all duration-300 ${isPlaying ? 'animate-eq' : 'h-[4px]'}`} 
-            style={{ backgroundColor: song.color, animationDelay: '0.1s' }} 
+            style={{ backgroundColor: song.color || albumColors.primary, animationDelay: '0.1s' }} 
           />
         </div>
         <h3 className="font-bold text-[15px] truncate tracking-tight">
-          {song.title} <span className="font-normal text-white/70">• {song.artist}</span>
+          {song.title} <span className={`font-normal ${isLight ? 'text-black/70' : 'text-white/70'}`}>• {song.artist}</span>
         </h3>
       </div>
 
@@ -395,8 +396,8 @@ export default function SpotifyCard() {
           className="relative w-full h-[34px] flex items-end cursor-pointer group/track" 
           onClick={handleSeek}
         >
-          {/* Unplayed Track (Gray) */}
-          <div className="absolute bottom-[2px] left-0 right-0 h-[4px] bg-white/20 rounded-full group-hover/track:h-[6px] transition-all" />
+          {/* Unplayed Track */}
+          <div className={`absolute bottom-[2px] left-0 right-0 h-[4px] rounded-full group-hover/track:h-[6px] transition-all ${isLight ? 'bg-black/10' : 'bg-white/20'}`} />
           
           {/* Played Track Container (Clipped to Progress Percentage) */}
           <div 
@@ -459,7 +460,7 @@ export default function SpotifyCard() {
         </div>
         
         {/* Timestamps */}
-        <div className="flex justify-between text-[11.5px] text-white/70 mt-1 font-medium px-1">
+        <div className={`flex justify-between text-[11.5px] mt-1 font-medium px-1 ${isLight ? 'text-black/70' : 'text-white/70'}`}>
           <span>{formatTime(localProgressMs)}</span>
           <span>{song.totalTime}</span>
         </div>
@@ -467,15 +468,15 @@ export default function SpotifyCard() {
 
       {/* Playback Controls */}
       <div className="relative z-10 flex justify-between items-center px-4 mt-4">
-        <button className="text-white hover:text-white/80 transition-colors">
+        <button className={`transition-colors ${isLight ? 'text-black hover:text-black/70' : 'text-white hover:text-white/80'}`}>
           <ThumbsUp size={20} strokeWidth={2} />
         </button>
-        <button className="text-white hover:text-white/80 transition-colors" onClick={handlePrev}>
+        <button className={`transition-colors ${isLight ? 'text-black hover:text-black/70' : 'text-white hover:text-white/80'}`} onClick={handlePrev}>
           <SkipBack size={24} className="fill-current" strokeWidth={1} />
         </button>
         <button 
           onClick={togglePlayPause}
-          className="text-white hover:scale-110 transition-transform active:scale-95"
+          className={`hover:scale-110 transition-transform active:scale-95 ${isLight ? 'text-black' : 'text-white'}`}
         >
           {isPlaying ? (
             <Pause size={32} className="fill-current" strokeWidth={1} />
@@ -483,10 +484,10 @@ export default function SpotifyCard() {
             <Play size={32} className="fill-current" strokeWidth={1} />
           )}
         </button>
-        <button className="text-white hover:text-white/80 transition-colors" onClick={handleNext}>
+        <button className={`transition-colors ${isLight ? 'text-black hover:text-black/70' : 'text-white hover:text-white/80'}`} onClick={handleNext}>
           <SkipForward size={24} className="fill-current" strokeWidth={1} />
         </button>
-        <button className="text-white hover:text-white/80 transition-colors">
+        <button className={`transition-colors ${isLight ? 'text-black hover:text-black/70' : 'text-white hover:text-white/80'}`}>
           <Shuffle size={20} strokeWidth={2} />
         </button>
       </div>
