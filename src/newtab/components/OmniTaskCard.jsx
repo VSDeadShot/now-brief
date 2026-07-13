@@ -58,7 +58,7 @@ export default function OmniTaskCard({ timeOfDay = 'evening' }) {
                       {(task.project || task.priority || task.dueDate) && (
                         <div className={`flex items-center gap-2 mt-0.5 text-xs ${subTextColor} font-medium`}>
                           {task.project && task.project !== 'General' && (
-                            <span className="bg-[#2C2C2C] px-1.5 py-0.5 rounded-md text-[#A0A0A0] truncate max-w-[100px]">
+                            <span className={`px-1.5 py-0.5 rounded-md truncate max-w-[100px] ${isLight ? 'bg-black/5 text-black/60' : 'bg-[#2C2C2C] text-[#A0A0A0]'}`}>
                               {task.project}
                             </span>
                           )}
