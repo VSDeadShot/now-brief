@@ -4,11 +4,32 @@ import { motion } from 'framer-motion';
 import { Play, Pause, SkipBack, SkipForward, ThumbsUp, Shuffle, Cast, AudioLines } from 'lucide-react';
 import { getAlbumColors } from '../../lib/colors';
 
+// PKCE Utility Functions
+const generateRandomString = (length) => {
+  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const values = crypto.getRandomValues(new Uint8Array(length));
+  return values.reduce((acc, x) => acc + possible[x % possible.length], "");
+}
+
+const sha256 = async (plain) => {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(plain);
+  return window.crypto.subtle.digest('SHA-256', data);
+}
+
+const base64encode = (input) => {
+  return btoa(String.fromCharCode(...new Uint8Array(input)))
+    .replace(/=/g, '')
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_');
+}
+
 export default function SpotifyCard({ timeOfDay = 'evening' }) {
   const isLight = timeOfDay === 'morning';
   const [hasToken, setHasToken] = useState(false);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true);
+  const [authError, setAuthError] = useState(null);
 
   // Check storage for token on mount
   React.useEffect(() => {
@@ -22,10 +43,11 @@ export default function SpotifyCard({ timeOfDay = 'evening' }) {
   }, []);
 
   const handleConnect = () => {
+    setAuthError(null);
     setIsAuthenticating(true);
     
     if (typeof chrome === 'undefined' || !chrome.identity) {
-      alert("Chrome Identity API not available. Make sure you are running as an extension.");
+      setAuthError("Chrome Identity API not available.");
       setIsAuthenticating(false);
       return;
     }
@@ -33,64 +55,79 @@ export default function SpotifyCard({ timeOfDay = 'evening' }) {
     const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
     
     if (!clientId || clientId === 'YOUR_CLIENT_ID_HERE') {
-      alert("Please set VITE_SPOTIFY_CLIENT_ID in your .env file!");
+      setAuthError("Missing Client ID in .env file");
       setIsAuthenticating(false);
       return;
     }
 
     const redirectUri = chrome.identity.getRedirectURL(); 
-    // Added user-modify-playback-state to allow controlling music
     const scope = 'user-read-currently-playing user-modify-playback-state';
     
-    const authUrl = new URL('https://accounts.spotify.com/authorize');
-    authUrl.searchParams.append('client_id', clientId);
-    authUrl.searchParams.append('response_type', 'code');
-    authUrl.searchParams.append('redirect_uri', redirectUri);
-    authUrl.searchParams.append('scope', scope);
+    const codeVerifier = generateRandomString(64);
+    
+    sha256(codeVerifier).then(hashed => {
+      const codeChallenge = base64encode(hashed);
 
-    chrome.identity.launchWebAuthFlow({
-      url: authUrl.toString(),
-      interactive: true
-    }, (redirectUrl) => {
-      if (chrome.runtime.lastError || !redirectUrl) {
-        console.error("Auth flow failed:", chrome.runtime.lastError);
-        setIsAuthenticating(false);
-        return;
-      }
+      const authUrl = new URL('https://accounts.spotify.com/authorize');
+      authUrl.searchParams.append('client_id', clientId);
+      authUrl.searchParams.append('response_type', 'code');
+      authUrl.searchParams.append('redirect_uri', redirectUri);
+      authUrl.searchParams.append('scope', scope);
+      authUrl.searchParams.append('code_challenge_method', 'S256');
+      authUrl.searchParams.append('code_challenge', codeChallenge);
 
-      // Extract code from redirect URL
-      const url = new URL(redirectUrl);
-      const code = url.searchParams.get('code');
-      
-      if (code) {
-        // Send code to live Vercel proxy to exchange for tokens
-        fetch('https://proxy-gamma-three-97.vercel.app/api/spotify-token', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ code, redirectUri })
-        })
-        .then(res => res.json())
-        .then(data => {
-          if (data.access_token) {
-            chrome.storage.local.set({
-              spotify_access_token: data.access_token,
-              spotify_refresh_token: data.refresh_token
-            }, () => {
-              setHasToken(true);
-              setIsAuthenticating(false);
-            });
-          } else {
-            console.error("No access token returned:", data);
-            setIsAuthenticating(false);
-          }
-        })
-        .catch(err => {
-          console.error("Token exchange failed:", err);
+      chrome.identity.launchWebAuthFlow({
+        url: authUrl.toString(),
+        interactive: true
+      }, (redirectUrl) => {
+        if (chrome.runtime.lastError || !redirectUrl) {
+          setAuthError(chrome.runtime.lastError?.message || "Auth flow failed or was cancelled.");
           setIsAuthenticating(false);
-        });
-      } else {
-        setIsAuthenticating(false);
-      }
+          return;
+        }
+
+        const url = new URL(redirectUrl);
+        const code = url.searchParams.get('code');
+        
+        if (code) {
+          // Exchange code for token directly via PKCE
+          const body = new URLSearchParams({
+            client_id: clientId,
+            grant_type: 'authorization_code',
+            code: code,
+            redirect_uri: redirectUri,
+            code_verifier: codeVerifier,
+          });
+
+          fetch('https://accounts.spotify.com/api/token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: body.toString()
+          })
+          .then(res => res.json())
+          .then(data => {
+            if (data.access_token) {
+              chrome.storage.local.set({
+                spotify_access_token: data.access_token,
+                spotify_refresh_token: data.refresh_token
+              }, () => {
+                setHasToken(true);
+                setIsAuthenticating(false);
+              });
+            } else {
+              setAuthError(data.error_description || "Invalid response from auth server.");
+              setIsAuthenticating(false);
+            }
+          })
+          .catch(err => {
+            setAuthError("Network error during token exchange.");
+            setIsAuthenticating(false);
+          });
+        } else {
+          setAuthError("No authorization code received.");
+          setIsAuthenticating(false);
+        }
+      });
     });
   };
 
@@ -173,17 +210,23 @@ export default function SpotifyCard({ timeOfDay = 'evening' }) {
         console.warn("Spotify token expired, refreshing silently...");
         chrome.storage.local.get(['spotify_refresh_token'], (result) => {
           if (result.spotify_refresh_token) {
-            fetch('https://proxy-gamma-three-97.vercel.app/api/spotify-refresh', {
+            const body = new URLSearchParams({
+              client_id: import.meta.env.VITE_SPOTIFY_CLIENT_ID,
+              grant_type: 'refresh_token',
+              refresh_token: result.spotify_refresh_token
+            });
+
+            fetch('https://accounts.spotify.com/api/token', {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ refresh_token: result.spotify_refresh_token })
+              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+              body: body.toString()
             })
             .then(refreshRes => refreshRes.json())
             .then(data => {
               if (data.access_token) {
                 chrome.storage.local.set({
                   spotify_access_token: data.access_token,
-                  spotify_refresh_token: data.refresh_token
+                  spotify_refresh_token: data.refresh_token || result.spotify_refresh_token
                 }, () => {
                   fetchCurrentlyPlaying(data.access_token);
                 });
@@ -312,6 +355,12 @@ export default function SpotifyCard({ timeOfDay = 'evening' }) {
           >
             {isAuthenticating ? 'Connecting...' : 'Connect Spotify'}
           </button>
+
+          {authError && (
+            <p className="text-red-400 text-[10px] mt-1 max-w-[200px] leading-tight">
+              Error: {authError}
+            </p>
+          )}
         </div>
       </Card>
     );
