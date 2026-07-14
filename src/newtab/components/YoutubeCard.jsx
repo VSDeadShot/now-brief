@@ -25,14 +25,18 @@ async function fetchYoutubeVideos() {
     results.forEach(result => {
       if (result.status === 'ok' && result.items) {
         // Map rss2json format to our expected format
-        const videos = result.items.map(item => ({
-          id: item.link.split('v=')[1] || item.guid,
-          title: item.title,
-          link: item.link,
-          thumbnail: `https://i.ytimg.com/vi/${item.link.split('v=')[1]}/maxresdefault.jpg`,
-          channelName: item.author,
-          publishedAt: item.pubDate
-        }));
+        const videos = result.items.map(item => {
+          const videoId = item.link.split('v=')[1] || item.guid.split(':')[2];
+          return {
+            id: videoId,
+            title: item.title,
+            link: item.link,
+            // Use the thumbnail from the RSS feed, fallback to hqdefault which is guaranteed to exist
+            thumbnail: item.thumbnail || `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+            channelName: item.author,
+            publishedAt: item.pubDate
+          };
+        });
         allVideos = [...allVideos, ...videos];
       }
     });
