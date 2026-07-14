@@ -4,14 +4,41 @@ import Card from './Card';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { getCache, setCache } from '../../lib/cache';
 
-// Proxy URL points to Vercel deployment
-const PROXY_URL = 'https://proxy-gamma-three-97.vercel.app';
+const CHANNELS = [
+  'UCBJycsmduvYEL83R_U4JriQ', // MKBHD
+  'UCMiJRAwDNSNzuYeN2uWa0pA', // Mrwhosetheboss
+  'UCVYamHliCI9eF9vM09D3-OA'  // Dave2D
+];
 
 async function fetchYoutubeVideos() {
   try {
-    const res = await fetch(`${PROXY_URL}/api/youtube`);
-    if (!res.ok) throw new Error('Failed to fetch');
-    return await res.json();
+    const promises = CHANNELS.map(channelId => 
+      fetch(`https://api.rss2json.com/v1/api.json?rss_url=https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`)
+      .then(res => res.json())
+    );
+    
+    const results = await Promise.all(promises);
+    let allVideos = [];
+    
+    results.forEach(result => {
+      if (result.status === 'ok' && result.items) {
+        // Map rss2json format to our expected format
+        const videos = result.items.map(item => ({
+          id: item.link.split('v=')[1] || item.guid,
+          title: item.title,
+          link: item.link,
+          thumbnail: `https://i.ytimg.com/vi/${item.link.split('v=')[1]}/maxresdefault.jpg`,
+          channelName: item.author,
+          publishedAt: item.pubDate
+        }));
+        allVideos = [...allVideos, ...videos];
+      }
+    });
+
+    // Sort by newest first
+    allVideos.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
+    
+    return allVideos;
   } catch (error) {
     console.error('YouTube fetch error:', error);
     return null;
