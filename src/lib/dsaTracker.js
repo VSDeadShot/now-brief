@@ -1,8 +1,16 @@
-const PROXY_URL = 'https://proxy-gamma-three-97.vercel.app';
-
 export async function fetchDsaReviews() {
   try {
-    const res = await fetch(`${PROXY_URL}/api/dsa-tracker`);
+    const secret = import.meta.env.VITE_NOW_BRIEF_SECRET;
+    if (!secret) {
+      console.warn("Missing VITE_NOW_BRIEF_SECRET in .env");
+      return null;
+    }
+
+    const res = await fetch(`https://trackingdsa.vercel.app/api/now-brief`, {
+      headers: {
+        'x-api-key': secret
+      }
+    });
     
     if (!res.ok) {
       throw new Error('Failed to fetch DSA reviews');

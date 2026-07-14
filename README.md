@@ -35,9 +35,11 @@ npm install
 ```
 
 ### 2. Configure Environment Variables
-Create a `.env` file in the root of the project and add your Spotify Client ID (required for the PKCE OAuth flow):
+Create a `.env` file in the root of the project and add your required API keys:
 ```env
 VITE_SPOTIFY_CLIENT_ID=your_spotify_client_id_here
+VITE_OPENWEATHER_API_KEY=your_openweather_api_key_here
+VITE_NOW_BRIEF_SECRET=your_dsa_tracker_secret_here
 ```
 *(Note: Make sure to add the extension's redirect URI to your Spotify Developer Dashboard allowed redirect URIs)*
 

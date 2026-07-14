@@ -1,19 +1,25 @@
-// During development, we'll point to the local Vercel dev server.
-// When deploying to production, this should be updated to your Vercel project URL.
-const PROXY_URL = 'https://proxy-gamma-three-97.vercel.app';
-
 export async function fetchWeather(city = 'Jaipur') {
   try {
-    const res = await fetch(`${PROXY_URL}/api/weather?city=${encodeURIComponent(city)}`);
-    if (!res.ok) {
+    const apiKey = import.meta.env.VITE_OPENWEATHER_API_KEY;
+    if (!apiKey) {
+      console.warn("Missing VITE_OPENWEATHER_API_KEY in .env");
+      return null;
+    }
+
+    const currentUrl = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&appid=${apiKey}`;
+    const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(city)}&units=metric&appid=${apiKey}`;
+    
+    const [currentResponse, forecastResponse] = await Promise.all([
+      fetch(currentUrl),
+      fetch(forecastUrl)
+    ]);
+
+    if (!currentResponse.ok || !forecastResponse.ok) {
       throw new Error('Weather fetch failed');
     }
-    const data = await res.json();
     
-    // Check if proxy returned new format { current, forecast } or old format (raw OpenWeather data)
-    const isNewFormat = data.current !== undefined;
-    const current = isNewFormat ? data.current : data;
-    const forecast = isNewFormat ? data.forecast : null;
+    const current = await currentResponse.json();
+    const forecast = await forecastResponse.json();
     
     // Process forecast to get next 4 intervals (3-hour intervals)
     let hourly = [];
