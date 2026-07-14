@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import GithubStreakCard from './components/GithubStreakCard';
 import WeatherCard from './components/WeatherCard';
 import DsaReviewCard from './components/DsaReviewCard';
@@ -7,8 +7,21 @@ import SamsungNewsCard from './components/SamsungNewsCard';
 import TechNewsCard from './components/TechNewsCard';
 import YoutubeCard from './components/YoutubeCard';
 import SpotifyCard from './components/SpotifyCard';
+import SettingsPanel from './components/SettingsPanel';
 
 export default function NewTab() {
+  const [customWallpaper, setCustomWallpaper] = useState(null);
+
+  // Fetch custom wallpaper on mount
+  useEffect(() => {
+    if (typeof chrome !== 'undefined' && chrome.storage) {
+      chrome.storage.local.get(['custom_wallpaper'], (result) => {
+        if (result.custom_wallpaper) {
+          setCustomWallpaper(result.custom_wallpaper);
+        }
+      });
+    }
+  }, []);
   const now = new Date();
   const hour = now.getHours();
   const day = now.getDay(); // 0: Sun, 1: Mon, ..., 5: Fri, 6: Sat
@@ -61,15 +74,30 @@ export default function NewTab() {
     return possibleSubtitles[Math.floor(Math.random() * possibleSubtitles.length)];
   }, [hour]);
 
+  // If a custom wallpaper is active, we make the base background completely transparent so the image shows through.
+  const containerBgClass = customWallpaper ? 'bg-transparent text-white' : baseBgClass;
+  const isLight = timeOfDay === 'morning';
+
   return (
-    <div className={`min-h-screen p-8 flex flex-col items-center justify-start font-sans overflow-y-auto relative z-0 ${baseBgClass}`}>
-      {/* Animated Aurora Background Mesh (Top and Bottom Halves) */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none z-[-1]">
-        {/* Top Half Blob */}
-        <div className={`absolute top-[-20%] left-[-20%] w-[140vw] h-[70vh] rounded-[100%] mix-blend-screen filter blur-[100px] opacity-70 animate-blob1 ${blob1Class}`}></div>
-        {/* Bottom Half Blob */}
-        <div className={`absolute bottom-[-20%] right-[-20%] w-[140vw] h-[70vh] rounded-[100%] mix-blend-screen filter blur-[120px] opacity-70 animate-blob2 ${blob2Class}`}></div>
-      </div>
+    <div className={`min-h-screen p-8 flex flex-col items-center justify-start font-sans overflow-y-auto relative z-0 ${containerBgClass}`}>
+      
+      {/* Custom Wallpaper Layer */}
+      {customWallpaper && (
+        <div 
+          className="fixed inset-0 z-[-2] bg-cover bg-center transition-opacity duration-500"
+          style={{ backgroundImage: `url(${customWallpaper})` }}
+        />
+      )}
+
+      {/* Animated Aurora Background Mesh (Top and Bottom Halves) - Hidden if custom wallpaper is used */}
+      {!customWallpaper && (
+        <div className="fixed inset-0 overflow-hidden pointer-events-none z-[-1]">
+          {/* Top Half Blob */}
+          <div className={`absolute top-[-20%] left-[-20%] w-[140vw] h-[70vh] rounded-[100%] mix-blend-screen filter blur-[100px] opacity-70 animate-blob1 ${blob1Class}`}></div>
+          {/* Bottom Half Blob */}
+          <div className={`absolute bottom-[-20%] right-[-20%] w-[140vw] h-[70vh] rounded-[100%] mix-blend-screen filter blur-[120px] opacity-70 animate-blob2 ${blob2Class}`}></div>
+        </div>
+      )}
       <div className="w-full max-w-5xl py-8 flex flex-col gap-8">
         
         {/* Main Header */}
@@ -132,6 +160,12 @@ export default function NewTab() {
           
         </div>
       </div>
+
+      {/* Settings Panel */}
+      <SettingsPanel 
+        isLight={isLight} 
+        onWallpaperChange={setCustomWallpaper} 
+      />
 
     </div>
   );
