@@ -5,9 +5,11 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { getCache, setCache } from '../../lib/cache';
 
 const CHANNELS = [
-  'UCBJycsmduvYEL83R_U4JriQ', // MKBHD
-  'UCMiJRAwDNSNzuYeN2uWa0pA', // Mrwhosetheboss
-  'UCVYamHliCI9eF9vM09D3-OA'  // Dave2D
+  'UC0h07r_UgTD0Tc-Dn5XLX3g', // wisp
+  'UCzwCEE_PchiBULMnAJqhGVg', // raj shamani
+  'UCi4oaPnysjad4Vb5G_8SkFg', // BLOX
+  'UCNhWSOlt_UoCzS2YSMhHYmA', // kai Notebook
+  'UCFRUDZUCGDlZGeGfftBovXw'  // simple actually
 ];
 
 async function fetchYoutubeVideos() {
