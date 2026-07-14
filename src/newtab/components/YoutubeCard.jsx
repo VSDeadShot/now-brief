@@ -44,7 +44,8 @@ async function fetchYoutubeVideos() {
     // Sort by newest first
     allVideos.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
     
-    return allVideos;
+    // Return only the top 8 most recent videos to match the 8 pagination dots in the UI
+    return allVideos.slice(0, 8);
   } catch (error) {
     console.error('YouTube fetch error:', error);
     return null;
