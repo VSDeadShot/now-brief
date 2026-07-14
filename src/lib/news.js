@@ -16,8 +16,8 @@ export async function fetchNews(type = 'tech') {
       throw new Error(`Failed to fetch ${type} news`);
     }
     
-    // Map rss2json format to our expected format
-    return data.items.map(item => ({
+    // Map rss2json format to our expected format, and only take the top 3 articles
+    return data.items.slice(0, 3).map(item => ({
       title: item.title,
       link: item.link,
       excerpt: item.description.replace(/<[^>]*>?/gm, '').substring(0, 150) + '...', // strip HTML and truncate
