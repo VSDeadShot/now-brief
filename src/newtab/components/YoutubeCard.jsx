@@ -132,7 +132,7 @@ export default function YoutubeCard({ timeOfDay = 'evening' }) {
             />
             
             {/* Gradient Overlay */}
-            <div className={`absolute inset-0 bg-gradient-to-t pointer-events-none ${isLight ? 'from-white/95 via-white/50 to-transparent' : 'from-black/90 via-black/40 to-transparent'}`}></div>
+            <div className="absolute inset-0 bg-gradient-to-t pointer-events-none from-black/90 via-black/40 to-transparent"></div>
             
             {/* Clickable Overlay */}
             <div 
@@ -178,7 +178,7 @@ export default function YoutubeCard({ timeOfDay = 'evening' }) {
                 initial={{ y: 10, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.4, delay: 0.1 }}
-                className={`font-bold text-lg leading-tight line-clamp-2 ${isLight ? 'text-black' : 'text-white'}`}
+                className="font-bold text-lg leading-tight line-clamp-2 text-white"
               >
                 {videos[currentIndex].title}
               </motion.h3>
@@ -188,7 +188,7 @@ export default function YoutubeCard({ timeOfDay = 'evening' }) {
                 initial={{ y: 10, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.4, delay: 0.2 }}
-                className={`flex items-center gap-1.5 text-sm font-medium ${isLight ? 'text-black/70' : 'text-white/70'}`}
+                className="flex items-center gap-1.5 text-sm font-medium text-white/70"
               >
                 <span>{generateFakeViews(videos[currentIndex].id)} views</span>
                 <span>•</span>
@@ -203,15 +203,15 @@ export default function YoutubeCard({ timeOfDay = 'evening' }) {
                 className="flex items-center justify-between mt-1"
               >
                 <div className="flex items-center gap-2">
-                  <div className={`w-6 h-6 rounded-full flex items-center justify-center overflow-hidden ${isLight ? 'bg-black/10' : 'bg-white/20'}`}>
-                    <span className={`text-[10px] font-bold uppercase ${isLight ? 'text-black' : 'text-white'}`}>
+                  <div className="w-6 h-6 rounded-full flex items-center justify-center overflow-hidden bg-white/20">
+                    <span className="text-[10px] font-bold uppercase text-white">
                       {videos[currentIndex].channelName.substring(0, 2)}
                     </span>
                   </div>
-                  <span className={`text-sm ${isLight ? 'text-black/90' : 'text-white/90'}`}>{videos[currentIndex].channelName}</span>
+                  <span className="text-sm text-white/90">{videos[currentIndex].channelName}</span>
                 </div>
                 
-                <div className={`px-2 py-0.5 rounded-md text-xs font-semibold backdrop-blur-sm ${isLight ? 'bg-white/80 text-black shadow-sm' : 'bg-white/20 text-white'}`}>
+                <div className="px-2 py-0.5 rounded-md text-xs font-semibold backdrop-blur-sm bg-black/60 text-white">
                   {generateFakeDuration(videos[currentIndex].id)}
                 </div>
               </motion.div>
@@ -223,7 +223,7 @@ export default function YoutubeCard({ timeOfDay = 'evening' }) {
                 <button 
                   key={idx}
                   onClick={() => setCurrentIndex(idx)}
-                  className={`h-1.5 rounded-full transition-all duration-300 ${idx === currentIndex ? (isLight ? 'bg-black w-4' : 'bg-white w-4') : (isLight ? 'bg-black/30 hover:bg-black/50 w-1.5' : 'bg-white/40 hover:bg-white/60 w-1.5')}`}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${idx === currentIndex ? 'bg-white w-4' : 'bg-white/40 hover:bg-white/60 w-1.5'}`}
                 />
               ))}
             </div>
