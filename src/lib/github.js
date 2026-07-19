@@ -1,8 +1,18 @@
 export async function fetchGithubActivity(username) {
   try {
-    const res = await fetch(`https://api.github.com/users/${username}/events/public?per_page=100&t=${Date.now()}`);
-    if (!res.ok) throw new Error('Failed to fetch GitHub events');
-    const events = await res.json();
+    // Fetch up to 3 pages (300 events) to calculate longer streaks more accurately
+    const [res1, res2, res3] = await Promise.all([
+      fetch(`https://api.github.com/users/${username}/events/public?per_page=100&page=1&t=${Date.now()}`),
+      fetch(`https://api.github.com/users/${username}/events/public?per_page=100&page=2&t=${Date.now()}`),
+      fetch(`https://api.github.com/users/${username}/events/public?per_page=100&page=3&t=${Date.now()}`)
+    ]);
+    
+    let events = [];
+    if (res1.ok) events.push(...(await res1.json()));
+    if (res2.ok) events.push(...(await res2.json()));
+    if (res3.ok) events.push(...(await res3.json()));
+
+    if (events.length === 0) throw new Error('Failed to fetch GitHub events');
     
     const today = new Date();
     const todayStr = today.toLocaleDateString('en-CA');
