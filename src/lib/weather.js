@@ -1,25 +1,14 @@
+const PROXY_URL = 'https://proxy-gamma-three-97.vercel.app';
+
 export async function fetchWeather(city = 'Jaipur') {
   try {
-    const apiKey = import.meta.env.VITE_OPENWEATHER_API_KEY;
-    if (!apiKey) {
-      console.warn("Missing VITE_OPENWEATHER_API_KEY in .env");
-      return null;
-    }
+    const res = await fetch(`${PROXY_URL}/api/weather?city=${encodeURIComponent(city)}`);
 
-    const currentUrl = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&appid=${apiKey}`;
-    const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(city)}&units=metric&appid=${apiKey}`;
-    
-    const [currentResponse, forecastResponse] = await Promise.all([
-      fetch(currentUrl),
-      fetch(forecastUrl)
-    ]);
-
-    if (!currentResponse.ok || !forecastResponse.ok) {
+    if (!res.ok) {
       throw new Error('Weather fetch failed');
     }
-    
-    const current = await currentResponse.json();
-    const forecast = await forecastResponse.json();
+
+    const { current, forecast } = await res.json();
     
     // Process forecast to get next 4 intervals (3-hour intervals)
     let hourly = [];
