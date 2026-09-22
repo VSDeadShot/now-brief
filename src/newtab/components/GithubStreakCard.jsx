@@ -29,6 +29,19 @@ export default function GithubStreakCard({ timeOfDay = 'evening' }) {
     loadData();
   }, []);
 
+  useEffect(() => {
+    if (typeof chrome === 'undefined' || !chrome.storage || !chrome.storage.onChanged) return;
+
+    function handleStorageChange(changes, areaName) {
+      if (areaName === 'local' && changes.github_streak) {
+        setData(changes.github_streak.newValue);
+      }
+    }
+
+    chrome.storage.onChanged.addListener(handleStorageChange);
+    return () => chrome.storage.onChanged.removeListener(handleStorageChange);
+  }, []);
+
   const isLight = timeOfDay === 'morning';
   const cardBg = isLight ? "bg-[#FFFFFF]" : "bg-[#1C1C1E]";
   const textColor = isLight ? "text-[#1A1A1A]" : "text-[#F5F5F5]";
