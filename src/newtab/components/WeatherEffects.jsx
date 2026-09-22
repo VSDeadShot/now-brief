@@ -16,20 +16,24 @@ export default function WeatherEffects({ condition, isNight }) {
   if (condition === 'Clear') {
     if (isNight) {
       const phaseIndex = getMoonPhaseIndex();
-      let moonStyle = {};
-      
+
       // 0:New, 1:WaxingCrescent, 2:FirstQuarter, 3:WaxingGibbous, 4:Full, 5:WaningGibbous, 6:LastQuarter, 7:WaningCrescent
-      switch (phaseIndex) {
-        case 0: moonStyle = { border: '2px solid rgba(255,255,255,0.05)' }; break;
-        case 1: moonStyle = { boxShadow: 'inset -16px 0px 0 0 rgba(226,232,240,0.9)' }; break;
-        case 2: moonStyle = { boxShadow: 'inset -48px 0px 0 0 rgba(226,232,240,0.9)' }; break;
-        case 3: moonStyle = { backgroundColor: 'rgba(226,232,240,0.9)', boxShadow: 'inset 24px 0px 0 0 rgba(0,0,0,0.6)' }; break;
-        case 4: moonStyle = { backgroundColor: 'rgba(226,232,240,0.9)', boxShadow: '0 0 20px rgba(226,232,240,0.4)' }; break;
-        case 5: moonStyle = { backgroundColor: 'rgba(226,232,240,0.9)', boxShadow: 'inset -24px 0px 0 0 rgba(0,0,0,0.6)' }; break;
-        case 6: moonStyle = { boxShadow: 'inset 48px 0px 0 0 rgba(226,232,240,0.9)' }; break;
-        case 7: moonStyle = { boxShadow: 'inset 16px 0px 0 0 rgba(226,232,240,0.9)' }; break;
-        default: moonStyle = { boxShadow: 'inset -16px 0px 0 0 rgba(226,232,240,0.9)' }; break;
-      }
+      // Offset (px) of a same-size dark disc over the lit disc, for a 96px (w-24/h-24) moon.
+      // Produces a curved lens-shaped terminator instead of a straight-line cut.
+      // These are NOT linear fractions of the diameter (24/48/72) - circle-overlap area is a
+      // non-linear function of center-to-center distance, so a 48px offset (half the diameter)
+      // actually covers ~61% of the disc, not 50%. Values below are solved from the true
+      // two-circle overlap-area formula so quarter phases land on an exact 50/50 split.
+      const PHASE_SHADOW_OFFSET = [0, -19, -39, -61, -96, 61, 39, 19];
+      const shadowOffset = PHASE_SHADOW_OFFSET[phaseIndex] ?? -19;
+
+      const moonBaseStyle = {
+        background: 'radial-gradient(circle at 32% 28%, #f8fafc 0%, #e5e9f0 45%, #c7cdd6 100%)',
+        boxShadow: 'inset -5px -5px 10px rgba(0,0,0,0.28), inset 2px 2px 6px rgba(255,255,255,0.35), 0 0 14px rgba(226,232,240,0.35), 0 0 0 1px rgba(148,163,184,0.28)'
+      };
+      const craterStyle = {
+        backgroundImage: 'radial-gradient(circle at 28% 62%, rgba(0,0,0,0.10) 0 6px, transparent 7px), radial-gradient(circle at 60% 24%, rgba(0,0,0,0.08) 0 4px, transparent 5px), radial-gradient(circle at 74% 66%, rgba(0,0,0,0.09) 0 5px, transparent 6px), radial-gradient(circle at 45% 42%, rgba(0,0,0,0.06) 0 3px, transparent 4px)'
+      };
 
       return (
         <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden rounded-[24px]">
@@ -48,18 +52,40 @@ export default function WeatherEffects({ condition, isNight }) {
               }}
             />
           ))}
-          
-          {/* Moon Glow */}
-          <motion.div 
-            animate={{ scale: [1, 1.05, 1], opacity: [0.4, 0.6, 0.4] }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-[-30px] right-[-30px] w-56 h-56 bg-slate-300/10 blur-3xl rounded-full" 
+
+          {/* Ambient Glow - wide, soft */}
+          <motion.div
+            animate={{ scale: [1, 1.06, 1], opacity: [0.22, 0.38, 0.22] }}
+            transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute top-[-40px] right-[-40px] w-64 h-64 bg-slate-300/10 blur-3xl rounded-full"
           />
-          {/* Dynamic Phase Moon */}
-          <div 
-            className="absolute top-[-10px] right-[10px] w-24 h-24 rounded-full opacity-90 blur-[0.5px] transition-all duration-1000" 
-            style={moonStyle}
+          {/* Ambient Glow - tight, closer to the disc */}
+          <motion.div
+            animate={{ scale: [1, 1.08, 1], opacity: [0.35, 0.6, 0.35] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute top-[-6px] right-[14px] w-36 h-36 bg-slate-200/20 blur-2xl rounded-full"
           />
+          {/* Dynamic Phase Moon - curved terminator via two overlapping discs */}
+          <div className="absolute top-[-10px] right-[10px] w-24 h-24 rounded-full overflow-hidden" style={moonBaseStyle}>
+            <div className="absolute inset-0 rounded-full mix-blend-multiply" style={craterStyle} />
+            <div
+              className="absolute inset-0 rounded-full transition-transform duration-1000"
+              style={{
+                transform: `translateX(${shadowOffset}px)`,
+                // Mostly-opaque so it reads as genuinely dark, but not fully opaque -
+                // a hint of the lit disc's own gradient still shows through as "earthshine"
+                // instead of a flat black cutout.
+                background: 'radial-gradient(circle at 70% 75%, rgba(120,132,156,0.82) 0%, rgba(55,60,78,0.92) 55%, rgba(12,13,18,0.97) 100%)',
+                filter: 'blur(7px)'
+              }}
+            />
+            <motion.div
+              animate={{ opacity: [0.5, 0.85, 0.5] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute inset-0 rounded-full"
+              style={{ boxShadow: 'inset 1.5px 1.5px 2px rgba(255,255,255,0.45)' }}
+            />
+          </div>
         </div>
       );
     }
