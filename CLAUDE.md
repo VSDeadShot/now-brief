@@ -57,3 +57,4 @@ VITE_SPOTIFY_CLIENT_ID
 ## Known loose ends
 - DSA Tracker card shows its fallback state (upstream `trackingdsa.vercel.app/api/now-brief` 500s in production, unrelated to proxy routing) — fix lives in the separate DSA Tracker project, not here
 - `scratch.json` / `scratch_channels.js`: tracked in git, look like throwaway files (the latter is a one-off script for looking up YouTube channel IDs) — not touched, flagged for cleanup
+- Streak card ignores private-repo contributions; a day with only private activity resets the streak
